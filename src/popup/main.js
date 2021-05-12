@@ -4,8 +4,6 @@ import store from '@/store'
 import router from './router'
 import { Button, Input } from 'element-ui'
 
-console.log(router)
-
 Vue.use(Button)
 Vue.use(Input)
 
