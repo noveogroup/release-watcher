@@ -22,8 +22,8 @@ export default class BaseController extends Dexie {
     return this.table.toArray()
   }
 
-  getByPrimaryKey (repoId) {
-    return this.table.get(repoId)
+  getByPrimaryKey (key) {
+    return this.table.get(key)
   }
 
   deleteByPrimaryKey (key) {

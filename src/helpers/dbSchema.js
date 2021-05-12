@@ -5,7 +5,7 @@ import {
 } from '@/constants'
 
 export const dbSchema = {
-  [REPOS_TABLE_NAME]: 'repoId, notifications, url, name, disabled',
-  [RELEASES_TABLE_NAME]: 'releaseId, repoId, body, date, title',
+  [REPOS_TABLE_NAME]: 'id, notifications, url, name, disabled',
+  [RELEASES_TABLE_NAME]: 'id, repoId, body, date, title',
   [GLOBAL_SETTINGS_TABLE_NAME]: 'requestInterval'
 }

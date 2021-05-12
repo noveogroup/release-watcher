@@ -8,8 +8,8 @@ export default class ReposController extends BaseController {
   }
 
   addRepo (url, name) {
-    const newRepo = new RepoModel().createRepo(url, name)
-    this.table.add(newRepo, newRepo.repoId)
-    return newRepo.repoId
+    const newRepo = new RepoModel().createNewRepo(url, name)
+    this.table.add(newRepo, newRepo.id)
+    return newRepo.id
   }
 }
