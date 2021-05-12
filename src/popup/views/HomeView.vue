@@ -2,12 +2,12 @@
   <div class="home-view">
     home view
     <WatchItem v-model="watchItemModel" />
-    watchItemModel model: {{watchItemModel}}
+    watchItemModel: {{watchItemModel}}
   </div>
 </template>
 
 <script>
-import WatchItem from '../../components/WatchItem'
+import WatchItem from '../components/WatchItem'
 
 export default {
   components: {
