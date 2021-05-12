@@ -1,24 +1,43 @@
 <template>
   <div>
-    <el-input :value="value" @input="$emit('input', $event)" size="mini">
-      <template #prepend> https://api.github.com/repos/ </template>
+    <el-input
+      v-model="currentItem"
+      size="mini"
+    >
+      <template #prepend>
+        https://api.github.com
+      </template>
     </el-input>
+
+    <el-button
+      :disabled="isFetching"
+      type="primary"
+      @click="onClick"
+    >
+      Add item
+    </el-button>
   </div>
 </template>
 
 <script>
 export default {
   props: {
-    value: {
-      default: () => {
-        return {
-          settings: {
-            on: true
-          },
-          url: ''
-        }
-      },
-      required: true
+    isFetching: {
+      type: Boolean,
+      default: false
+    }
+  },
+
+  data () {
+    return {
+      currentItem: ''
+    }
+  },
+
+  methods: {
+    onClick () {
+      this.$emit('onAddBtnClick', this.currentItem)
+      this.currentItem = ''
     }
   }
 }
