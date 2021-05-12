@@ -12,7 +12,7 @@ export default class RepoModel {
 
   createNewRepo (url, name, id = this.id) {
     return {
-      repoId: id,
+      id: id,
       notifications: defaultNotificationSetting,
       url: url || 'url not found',
       name: name || 'name not found',
