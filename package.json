@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service build --mode development --watch",
+    "dev": "vue-cli-service build --mode development --watch",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
@@ -11,9 +11,10 @@
     "@iconfu/svg-inject": "^1.2.3",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
-    "dexie": "^3.0.3",
     "element-ui": "^2.15.1",
+    "indexeddb-orm": "^3.2.1",
     "uuid": "^8.3.2",
+    "validate": "^5.1.0",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
     "vuex": "^3.4.0"
