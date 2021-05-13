@@ -28,5 +28,8 @@
       "js": ["js/content-script.js"]
     }
   ],
-  "web_accessible_resources": ["images/watch.png", "images/stopWatch.png"]
+  "web_accessible_resources": [
+    "images/trackOn.svg",
+    "images/trackOff.svg"
+  ]
 }
