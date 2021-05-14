@@ -3,14 +3,14 @@
     <el-input
       v-model="currentItem"
       size="mini"
-    >
-      <template #prepend>
-        https://api.github.com
-      </template>
-    </el-input>
+    />
+
+    <div>
+      vuex isAllowedURL: {{ getIsAllowedURL }}
+    </div>
 
     <el-button
-      :disabled="isFetching"
+      :disabled="!isFetching && !allowedPage"
       type="primary"
       @click="onClick"
     >
@@ -20,6 +20,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   props: {
     isFetching: {
@@ -30,8 +32,15 @@ export default {
 
   data () {
     return {
-      currentItem: ''
+      currentItem: '',
+
+      currentURL: null,
+      allowedPage: false
     }
+  },
+
+  computed: {
+    ...mapGetters(['getIsAllowedURL'])
   },
 
   methods: {

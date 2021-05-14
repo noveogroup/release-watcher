@@ -8,15 +8,17 @@
       {{ fetchedRepos }}
     </template>
     <div>
-      currentTabUrl: {{ currentTabUrl }}
+      currentURL: {{ currentURL }}
     </div>
   </div>
 </template>
 
 <script>
 import WatchItem from '../components/WatchItem'
+import { mapState } from 'vuex'
 
 import { fetchRepo } from '../../axios'
+import { getUrlFromExt } from '../../utils/urlWorkers'
 
 export default {
   components: {
@@ -35,21 +37,21 @@ export default {
     }
   },
 
-  methods: {
-    async getCurrentTabUrl () {
-      const res = await browser.tabs.query({
-        active: true,
-        currentWindow: true
-      })
-      this.currentTabUrl = res[0].url
-    },
+  computed: {
+    ...mapState(['currentURL'])
+  },
 
+  async mounted () {
+    this.$store.dispatch('setCurrentURL', await getUrlFromExt())
+  },
+
+  methods: {
     async addItem (item) {
       this.flags.isFetching = true
 
       try {
         this.fetchedRepos.push(await fetchRepo(item))
-        await this.getCurrentTabUrl()
+        this.currentTabUrl = await getUrlFromExt()
       } catch (e) {
         console.log('addItem error', e)
       } finally {
