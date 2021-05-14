@@ -1,7 +1,7 @@
-import { isAllowedURL } from '../utils/urlWorkers'
+import { isMainRepoPage } from '../utils/urlWorkers'
 
 export default {
-  getIsAllowedURL (state) {
-    return state.currentURL ? isAllowedURL(state.currentURL) : false
+  getIsMainRepoPage (state) {
+    return state.currentURL ? isMainRepoPage(state.currentURL) : false
   }
 }

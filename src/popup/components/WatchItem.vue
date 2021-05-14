@@ -6,11 +6,11 @@
     />
 
     <div>
-      vuex isAllowedURL: {{ getIsAllowedURL }}
+      vuex getIsMainRepoPage: {{ getIsMainRepoPage }}
     </div>
 
     <el-button
-      :disabled="!isFetching && !allowedPage"
+      :disabled="!isFetching && !getIsMainRepoPage"
       type="primary"
       @click="onClick"
     >
@@ -32,15 +32,12 @@ export default {
 
   data () {
     return {
-      currentItem: '',
-
-      currentURL: null,
-      allowedPage: false
+      currentItem: ''
     }
   },
 
   computed: {
-    ...mapGetters(['getIsAllowedURL'])
+    ...mapGetters(['getIsMainRepoPage'])
   },
 
   methods: {
