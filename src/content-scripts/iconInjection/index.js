@@ -7,7 +7,7 @@ import {
   iconContainerStylesPrimary,
   iconContainerStylesDanger
 } from './styleLogic'
-import { add, remove, isWatching } from '../saveRepo'
+import { isWatching, updateRepo } from '../bgConnect'
 import { watchIcon, watchDisabledIcon } from '@/utils/getAssets'
 
 let watchState = false
@@ -23,40 +23,35 @@ export const iconContainer = document.createElement('div')
 
 const text = document.createElement('span')
 iconContainer.appendChild(text)
-
-// toggle event listener on container
-iconContainer.addEventListener('click', e => {
-  watchState = !watchState
-  watchState ? add() : remove()
-  toggleIcon()
-})
-
-// styles adding
 applyStylesFromObj(iconContainerStyles, iconContainer)
 applyStylesFromObj(releasesHeaderStyles, releasesHeader)
 iconContainer.classList.add('Counter')
 
-const toggleIcon = () => {
-  const watchImage = document.createElement('img')
+iconContainer.addEventListener('click', e => {
+  watchState = !watchState
+  watchState ? updateRepo(true) : updateRepo(false)
+  toggleIcon()
+})
 
+const toggleIcon = () => {
   if (iconContainer.children.length > 1) {
     iconContainer.lastChild.remove()
-  } // remove if already have a icon
+  }
 
+  const watchImage = document.createElement('img')
   iconContainer.appendChild(watchImage)
 
   if (watchState) {
-    watchImage.src = watchIcon
+    watchImage.src = watchDisabledIcon
     text.innerText = 'stop watching'
     applyStylesFromObj(iconContainerStylesDanger, iconContainer)
   } else {
-    watchImage.src = watchDisabledIcon
+    watchImage.src = watchIcon
     text.innerText = 'watch'
     applyStylesFromObj(iconContainerStylesPrimary, iconContainer)
   }
 
   watchImage.onload = function () {
-    // injecting svg inline for customization (themes)
     SVGInject(this, {
       afterLoad: svg => {
         applyStylesFromObj(iconStyles, svg)

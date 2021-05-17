@@ -1,9 +1,11 @@
 import axios from 'axios'
-import { baseAiUrl } from '@/constants'
+
+const instance = axios.create()
 
 export const fetchRepo = async (url) => {
   try {
-    const res = await axios.get(baseAiUrl + url)
+    const res = await instance.get(url)
+    console.log(res)
     return res.data
   } catch (e) {
     console.log('fetchRepo / error', e)

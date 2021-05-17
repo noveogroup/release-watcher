@@ -1,11 +1,6 @@
 import Schema from 'validate'
 
 const baseColumns = {
-  uuid: {
-    type: String,
-    length: 36,
-    required: true
-  },
   id: {
     type: String,
     required: true
@@ -25,7 +20,7 @@ const baseColumns = {
 }
 
 export default class BaseModel extends Schema {
-  constructor (tableName, newColumns = {}, primary = 'uuid') {
+  constructor (tableName, newColumns = {}, primary = 'id') {
     if (typeof tableName !== 'string') throw new Error('BaseModel - tableName is required')
 
     const mergedColumns = {

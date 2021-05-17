@@ -13,8 +13,8 @@ export default class BaseController {
 
   async getOne (value) {
     try {
-      const models = await this.db.connect()
-      const result = models[this.tableName].find(value)
+      const tables = await this.db.connect()
+      const result = tables[this.tableName].find(value)
 
       return Promise.resolve(result)
     } catch (error) {
@@ -24,8 +24,8 @@ export default class BaseController {
 
   async getAll () {
     try {
-      const models = await this.db.connect()
-      const result = models[this.tableName].all()
+      const tables = await this.db.connect()
+      const result = tables[this.tableName].all()
 
       return Promise.resolve(result)
     } catch (error) {
@@ -39,8 +39,8 @@ export default class BaseController {
       const errors = new Model().validate(payload)
       if (errors.length) throw new Error(errors)
 
-      const models = await this.db.connect()
-      const result = models[this.tableName].create(payload)
+      const tables = await this.db.connect()
+      const result = tables[this.tableName].create(payload)
 
       return Promise.resolve(result)
     } catch (error) {
@@ -54,8 +54,8 @@ export default class BaseController {
       const errors = new Model().validate(payload)
       if (errors.length) throw new Error(errors)
 
-      const models = await this.db.connect()
-      const result = models[this.tableName].save(uuid, payload)
+      const tables = await this.db.connect()
+      const result = tables[this.tableName].save(uuid, payload)
 
       return Promise.resolve(result)
     } catch (error) {
@@ -65,8 +65,8 @@ export default class BaseController {
 
   async delete (value) {
     try {
-      const models = await this.db.connect()
-      const result = models[this.tableName].delete(value)
+      const tables = await this.db.connect()
+      const result = tables[this.tableName].delete(value)
 
       return Promise.resolve(result)
     } catch (error) {
