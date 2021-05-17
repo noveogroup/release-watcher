@@ -4,28 +4,40 @@ import { baseApiUrl } from '@/constants'
 
 const url = baseApiUrl + window.location.pathname + '/releases'
 const name = window.location.pathname.split('/')[2]
-const uuidValue = uuid()
+const id = document
+  .querySelector("meta[name='octolytics-dimension-repository_id']")
+  ?.getAttribute('content')
+  ?.toString()
 
 export const add = async () => {
-  const controller = new RepoController()
-  controller.create({
-    uuid: uuidValue,
-    id: document
-      .querySelector("meta[name='octolytics-dimension-repository_id']")
-      ?.getAttribute('content')
-      ?.toString(),
-    url,
-    name
-  })
+  try {
+    const controller = new RepoController()
+    controller.create({
+      uuid: uuid(),
+      id,
+      url,
+      name
+    })
+  } catch (error) {
+    console.error('db erorr', error)
+  }
 }
 
 export const remove = async () => {
-  const controller = new RepoController()
-  const res = await controller.deleteById(
-    document
-      .querySelector("meta[name='octolytics-dimension-repository_id']")
-      ?.getAttribute('content')
-      ?.toString()
-  )
-  console.log('result is ', res)
+  try {
+    const controller = new RepoController()
+    return await controller.delete(id)
+  } catch (error) {
+    console.error('db erorr', error)
+  }
+}
+
+export const findId = async () => {
+  try {
+    const controller = new RepoController()
+    const res = await controller.getOne(id)
+    return !!res
+  } catch (error) {
+    console.error('db erorr', error)
+  }
 }
