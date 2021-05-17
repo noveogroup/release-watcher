@@ -16,6 +16,6 @@ export default class RepoModel extends BaseModel {
         type: Boolean,
         required: false
       }
-    })
+    }, 'id')
   }
 }

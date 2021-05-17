@@ -2,17 +2,19 @@ import db from '../db'
 
 export default class BaseController {
   constructor (tableName, Model) {
-    if (!tableName || !Model) throw new Error('BaseController - tableName and Model is required')
+    if (!tableName || !Model) {
+      throw new Error('BaseController - tableName and Model is required')
+    }
 
     this.tableName = tableName
     this.Model = Model
     this.db = db
   }
 
-  async getOne (uuid) {
+  async getOne (value) {
     try {
       const models = await this.db.connect()
-      const result = models[this.tableName].find(uuid)
+      const result = models[this.tableName].find(value)
 
       return Promise.resolve(result)
     } catch (error) {
@@ -61,10 +63,10 @@ export default class BaseController {
     }
   }
 
-  async delete (uuid) {
+  async delete (value) {
     try {
       const models = await this.db.connect()
-      const result = models[this.tableName].delete(uuid)
+      const result = models[this.tableName].delete(value)
 
       return Promise.resolve(result)
     } catch (error) {

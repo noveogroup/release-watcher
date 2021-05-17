@@ -6,23 +6,36 @@ const applyStylesFromObj = (obj, target) => {
   })
 }
 const releasesHeaderStyles = {
-  display: 'flex'
+  display: 'flex',
+  alignItems: 'flex-end'
 }
 
 const iconContainerStyles = {
-  marginRight: '5px',
+  marginLeft: '5px',
   minWidth: '24px',
-  height: '24px',
-  cursor: 'pointer'
+  height: '20px',
+  cursor: 'pointer',
+  display: 'flex'
+}
+
+const iconContainerStylesPrimary = {
+  backgroundColor: 'var(--color-btn-primary-bg, #347d39)'
+}
+
+const iconContainerStylesDanger = {
+  backgroundColor: 'var(--color-downvote-icon-bg, #78191b)'
 }
 
 const iconStyles = {
-  fill: 'var(--color-text-primary)'
+  fill: 'var(--color-text-primary)',
+  height: '20px'
 }
 
 export {
   applyStylesFromObj,
   iconContainerStyles,
+  iconContainerStylesPrimary,
+  iconContainerStylesDanger,
   releasesHeaderStyles,
   iconStyles
 }
