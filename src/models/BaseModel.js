@@ -1,8 +1,15 @@
 import Schema from 'validate'
+import { REGEX_UUID } from '../db/constants'
 
 const baseColumns = {
-  id: {
+  uuid: {
     type: String,
+    required: true,
+    match: REGEX_UUID,
+    length: 36
+  },
+  index: {
+    type: Number,
     required: true
   },
   created_at: {
@@ -16,11 +23,20 @@ const baseColumns = {
   deleted_at: {
     type: Date,
     required: false
+  },
+  deleted: {
+    type: Boolean,
+    require: false
   }
 }
 
 export default class BaseModel extends Schema {
-  constructor (tableName, newColumns = {}, primary = 'id') {
+  /**
+   * @param {String} tableName - The table name
+   * @param {Object} newColumns - The new columns for table
+   * @param {String} primary - The primary key
+   */
+  constructor (tableName, newColumns = {}, primary = 'uuid') {
     if (typeof tableName !== 'string') throw new Error('BaseModel - tableName is required')
 
     const mergedColumns = {

@@ -1,9 +1,13 @@
 import BaseModel from './BaseModel'
-import { REPOS_TABLE_NAME } from '../db/constants'
+import { REPOS_TABLE_NAME, PRIMARY_KEY } from '../db/constants'
 
 export default class RepoModel extends BaseModel {
   constructor () {
     super(REPOS_TABLE_NAME, {
+      id: {
+        type: String,
+        required: true
+      },
       url: {
         type: String,
         required: true
@@ -16,6 +20,6 @@ export default class RepoModel extends BaseModel {
         type: Boolean,
         required: false
       }
-    }, 'id')
+    }, PRIMARY_KEY)
   }
 }

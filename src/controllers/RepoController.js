@@ -4,7 +4,7 @@ import RepoModel from '../models/RepoModel'
 
 export default class RepoController extends BaseController {
   constructor () {
-    super(REPOS_TABLE_NAME, RepoModel)
+    super(REPOS_TABLE_NAME, new RepoModel())
   }
 
   async getActiveReposUrls () {

@@ -4,6 +4,6 @@ import ReleasesModel from '../models/RepoModel'
 
 export default class RepoController extends BaseController {
   constructor () {
-    super(RELEASES_TABLE_NAME, ReleasesModel)
+    super(RELEASES_TABLE_NAME, new ReleasesModel())
   }
 }
