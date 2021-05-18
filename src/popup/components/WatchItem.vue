@@ -1,20 +1,12 @@
 <template>
   <div>
-    <el-input
-      v-model="currentItem"
-      size="mini"
-    />
-
-    <div>
-      vuex getIsMainRepoPage: {{ getIsMainRepoPage }}
-    </div>
-
     <el-button
-      :disabled="!isFetching && !getIsMainRepoPage"
+      v-show="getIsMainRepoPage"
+      :disabled="isFetching"
       type="primary"
       @click="onClick"
     >
-      Add item
+      Add this repo
     </el-button>
   </div>
 </template>

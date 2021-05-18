@@ -1,9 +1,9 @@
 import axios from 'axios'
-import { baseAiUrl } from '@/constants'
+import { baseApiUrl } from '@/constants'
 
 export const fetchRepo = async (url) => {
   try {
-    const res = await axios.get(baseAiUrl + url)
+    const res = await axios.get(baseApiUrl + url)
     return res.data
   } catch (e) {
     console.log('fetchRepo / error', e)

@@ -1,20 +1,25 @@
 <template>
-  <div class="home-view">
-    <WatchItem
-      :is-fetching="flags.isFetching"
-      @onAddBtnClick="addItem($event)"
-    />
-    <template>
-      {{ fetchedRepos }}
-    </template>
-    <div>
-      currentURL: {{ currentURL }}
+  <div class="home">
+    <h1>
+      Release watcher
+    </h1>
+    <div class="home__head">
+      <WatchItem
+        :is-fetching="flags.isFetching"
+        @onAddBtnClick="addItem('/vuejs/vue')"
+      />
     </div>
+
+    <TheReposList :repos="fetchedRepos"/>
   </div>
 </template>
 
 <script>
 import WatchItem from '../components/WatchItem'
+import TheReposList from '../components/home/TheReposList'
+
+import mock from '../components/home/mock.json'
+
 import { mapState } from 'vuex'
 
 import { fetchRepo } from '../../axios'
@@ -22,7 +27,8 @@ import { getUrlFromExt } from '../../utils/urlWorkers'
 
 export default {
   components: {
-    WatchItem
+    WatchItem,
+    TheReposList
   },
 
   data () {
@@ -42,6 +48,7 @@ export default {
   },
 
   async mounted () {
+    this.fetchedRepos = [...mock]
     this.$store.dispatch('setCurrentURL', await getUrlFromExt())
   },
 
@@ -64,6 +71,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.home-view {
+.home {
+  display: flex;
+  flex-direction: column;
+
+  &__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 }
 </style>

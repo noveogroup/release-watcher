@@ -19,6 +19,13 @@ const routes = [
           import(
             /* webpackChunkName: "SettingsView" */ '../views/SettingsView.vue'
           )
+      },
+      {
+        path: '/repo/:id',
+        component: () =>
+          import(
+            /* webpackChunkName: "RepoPage" */ '../views/RepoView.vue'
+          )
       }
     ]
   }
