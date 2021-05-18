@@ -1,22 +1,46 @@
 <template>
   <div class="home">
+
     <h1>
       Release watcher
     </h1>
+
     <div class="home__head">
-      <WatchItem
-        :is-fetching="flags.isFetching"
-        @onAddBtnClick="addItem('/vuejs/vue')"
-      />
+      <TheUrlAdder @urlAdded="addUrl($event)"/>
+
+<!--      <TheWatchItem-->
+<!--        class="addRepo-btn"-->
+<!--        :is-fetching="flags.isFetching"-->
+<!--        @onAddBtnClick="addItem('/vuejs/vue')"-->
+<!--      />-->
     </div>
 
-    <TheReposList :repos="fetchedRepos"/>
+    <el-radio-group
+      v-model="radio1"
+      size="mini"
+    >
+      <el-radio-button
+        v-for="language in languagesTopics"
+        :key="language"
+        :label="language"
+      >
+        {{ language }}
+      </el-radio-button>
+    </el-radio-group>
+
+    <TheReposList
+      v-if="formattedList.length"
+      :repos="formattedList"
+      @loadMore="loadMore"
+      @onRemoveRepo="removeRepo($event)"
+    />
   </div>
 </template>
 
 <script>
-import WatchItem from '../components/WatchItem'
+// import TheWatchItem from '../components/home/TheWatchItem'
 import TheReposList from '../components/home/TheReposList'
+import TheUrlAdder from '../components/home/TheUrlAdder'
 
 import mock from '../components/home/mock.json'
 
@@ -27,15 +51,18 @@ import { getUrlFromExt } from '../../utils/urlWorkers'
 
 export default {
   components: {
-    WatchItem,
-    TheReposList
+    // TheWatchItem,
+    TheReposList,
+    TheUrlAdder
   },
 
   data () {
     return {
       fetchedRepos: [],
 
-      currentTabUrl: '',
+      currentCount: 10,
+
+      radio1: null,
 
       flags: {
         isFetching: false
@@ -44,12 +71,33 @@ export default {
   },
 
   computed: {
-    ...mapState(['currentURL'])
+    ...mapState(['currentURL']),
+
+    formattedList () {
+      return this.fetchedRepos.slice(0, this.currentCount)
+    },
+
+    languagesTopics () {
+      return [...new Set(this.fetchedRepos.map(e => e.language))]
+    }
   },
 
-  async mounted () {
+  async created () {
     this.fetchedRepos = [...mock]
     this.$store.dispatch('setCurrentURL', await getUrlFromExt())
+
+    const count = 100
+    const res = [...this.fetchedRepos]
+    const exampleItem = res[res.length - 1]
+
+    for (let i = 0; i < count; i++) {
+      res.push({
+        ...exampleItem,
+        id: exampleItem.id + i + 1
+      })
+    }
+
+    this.fetchedRepos = res
   },
 
   methods: {
@@ -58,14 +106,21 @@ export default {
 
       try {
         this.fetchedRepos.push(await fetchRepo(item))
-        this.currentTabUrl = await getUrlFromExt()
       } catch (e) {
         console.log('addItem error', e)
       } finally {
         this.flags.isFetching = false
       }
-    }
+    },
 
+    removeRepo (id) {
+      const idx = this.fetchedRepos.indexOf(this.fetchedRepos.find(e => e.id === id))
+      this.fetchedRepos.splice(idx, 1)
+    },
+
+    loadMore () {
+      this.currentCount += 10
+    }
   }
 }
 </script>
@@ -79,6 +134,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin-bottom: 12px;
   }
 }
 </style>

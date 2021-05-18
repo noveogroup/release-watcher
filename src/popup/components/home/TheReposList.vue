@@ -1,71 +1,88 @@
 <template>
-  <div>
+  <div class="repo__list">
+    <div
+      v-for="repo in repos"
+      :key="repo.id"
+      class="repo__tab-wrap"
+    >
+      <div class="repo__tab">
+        <span>
+          {{ repo.name }}
+        </span>
 
-    <div v-if="repos.length < 5" class="repo__btn-wrap">
-      <el-button
-        v-for="repo in repos"
-        :key="`repo_option-${repo.id}`"
-        type="primary"
-        class="repo__btn"
-        @click="onRepoClicked(repo.id)"
-      >
-        {{ repo.name }}
-      </el-button>
+        <div>
+          <el-button
+            size="small"
+            icon="el-icon-view"
+            @click="onRepoSelect(repo.id)"
+          />
+
+          <el-button
+            size="small"
+            icon="el-icon-delete"
+            @click="onDeleteClicking(repo.id)"
+          />
+        </div>
+
+      </div>
+
     </div>
 
-    <template v-else>
-      <el-select
-        :value="val"
-        @change="onRepoSelect($event)"
-        placeholder="Your following repositories"
-      >
-        <el-option
-          v-for="repo in formattedRepos"
-          :key="`repo_option-${repo.value}`"
-          :label="repo.label"
-          :value="repo.value">
-        </el-option>
-      </el-select>
-    </template>
+    <VConfirmPopup
+      v-show="showConfirm"
+      @onChange="onConfirmChange($event)"
+    />
 
+    <VObserver @intersect="intersected" />
   </div>
 </template>
 
 <script>
+import VObserver from '../utils/VObserver'
+import VConfirmPopup from '../sharable/VConfirmPopup'
+
 export default {
   name: 'TheReposList',
-
-  data () {
-    return {
-      val: null
-    }
+  components: {
+    VObserver,
+    VConfirmPopup
   },
 
-  computed: {
-    formattedRepos () {
-      return this.repos.map(repo => {
-        return {
-          label: repo.name,
-          value: repo.id
-        }
-      })
-    }
-  },
+  data: () => ({
+    showConfirm: false,
+
+    deletingCandidate: null
+  }),
 
   props: {
     repos: {
-      type: Object,
-      default: () => ({})
+      type: Array,
+      default: () => ([])
     }
   },
 
   methods: {
-    onRepoClicked (command) {
-      this.$router.push(`/${command}`)
+
+    onRepoSelect (id) {
+      console.log(id)
+      this.$router.push(`/repo/${id}`)
     },
 
-    onRepoSelect (val) {
-      this.$router.push(`/repo/${val}`)
+    intersected () {
+      this.$emit('loadMore')
+    },
+
+    onDeleteClicking (id) {
+      this.deletingCandidate = id
+      this.showConfirm = !this.showConfirm
+    },
+
+    onConfirmChange (status) {
+      if (status === 'confirm') {
+        this.$emit('onRemoveRepo', this.deletingCandidate)
+      }
+      this.deletingCandidate = null
+      this.showConfirm = false
     }
   }
 }
@@ -73,18 +90,17 @@ export default {
 
 <style lang="scss" scoped>
 .repo {
-  &__btn {
-    width: calc(100% / 2 - 10px / 2);
-    margin: 0 0 10px 0;
+  &__list {
+    padding: 10px 8px;
+  }
 
-    &:nth-child(2n) {
-      margin-left: 10px;
-    }
+  &__tab {
+    display: flex;
+    justify-content: space-between;
 
     &-wrap {
-      display: flex;
-      flex-wrap: wrap;
-      padding-top: 10px;
+      position: relative;
+      cursor: pointer;
     }
   }
 }

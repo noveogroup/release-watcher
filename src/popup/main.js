@@ -7,15 +7,23 @@ import {
   Input,
   Switch,
   Select,
-  Option
+  Option,
+  Collapse,
+  CollapseItem,
+  RadioGroup,
+  RadioButton
 } from 'element-ui'
 
 const components = {
-  Button: Button,
-  Input: Input,
-  Switch: Switch,
-  Select: Select,
-  Option: Option
+  Button,
+  Input,
+  Switch,
+  Select,
+  Option,
+  Collapse,
+  CollapseItem,
+  RadioGroup,
+  RadioButton
 }
 
 Object.keys(components).forEach(key => {

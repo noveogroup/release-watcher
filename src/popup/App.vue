@@ -24,4 +24,9 @@ html {
   width: 400px;
   height: 400px;
 }
+
+body {
+  margin: 0;
+  padding: 14px 10px;
+}
 </style>

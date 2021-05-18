@@ -4,6 +4,7 @@
       v-show="getIsMainRepoPage"
       :disabled="isFetching"
       type="primary"
+      size="small"
       @click="onClick"
     >
       Add this repo
