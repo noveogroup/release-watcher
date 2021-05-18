@@ -6,17 +6,24 @@ import {
 } from './constants'
 
 import RepoModel from '../models/RepoModel'
+import ReleasesModel from '../models/ReleasesModel'
 
 const {
   table: reposTable,
   migration: reposMigration
 } = new RepoModel()
+const {
+  table: releasesTable,
+  migration: releasesMigration
+} = new ReleasesModel()
 
 const tables = [
-  reposTable
+  reposTable,
+  releasesTable
 ]
 const migrations = [
-  reposMigration
+  reposMigration,
+  releasesMigration
 ]
 
 const settings = {

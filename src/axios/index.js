@@ -1,9 +1,13 @@
 import axios from 'axios'
-const apiUrl = 'https://api.github.com'
+
+// TODO: Need - export default axios.create() with default settings
+const instance = axios.create()
 
 export const fetchRepo = async (url) => {
   try {
-    return await axios.get(apiUrl + url)
+    const res = await instance.get(url)
+    console.log(res)
+    return res.data
   } catch (e) {
     console.log('fetchRepo / error', e)
   }

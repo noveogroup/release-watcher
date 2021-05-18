@@ -3,55 +3,64 @@ import {
   applyStylesFromObj,
   iconContainerStyles,
   releasesHeaderStyles,
-  iconStyles
+  iconStyles,
+  iconContainerStylesPrimary,
+  iconContainerStylesDanger
 } from './styleLogic'
+import { isWatching, updateRepo } from '../bgConnect'
+import { watchIcon, watchDisabledIcon } from '@/utils/getAssets'
 
-let watchState = false // local state of icons
+let watchState = false
 
 const hTwoTags = document.getElementsByTagName('h2')
-
-const releasesHeader = Array.from(hTwoTags).find(header => {
+export const releasesHeader = Array.from(hTwoTags).find(header => {
   return (
     header.firstElementChild?.baseURI + '/releases' ===
     header.firstElementChild?.href
   )
 })
+export const iconContainer = document.createElement('div')
 
-const imageUrl = chrome.runtime.getURL('images/trackOn.svg')
-const imageActiveUrl = chrome.runtime.getURL('images/trackOff.svg')
+const text = document.createElement('span')
+iconContainer.appendChild(text)
+applyStylesFromObj(iconContainerStyles, iconContainer)
+applyStylesFromObj(releasesHeaderStyles, releasesHeader)
+iconContainer.classList.add('Counter')
 
-const iconContainer = document.createElement('div')
+iconContainer.addEventListener('click', e => {
+  watchState = !watchState
+  watchState ? updateRepo(true) : updateRepo(false)
+  toggleIcon()
+})
 
 const toggleIcon = () => {
+  if (iconContainer.children.length > 1) {
+    iconContainer.lastChild.remove()
+  }
+
   const watchImage = document.createElement('img')
-
-  if (iconContainer.children.length) { iconContainer.firstChild.remove() } // remove if already have a icon
-
   iconContainer.appendChild(watchImage)
 
-  watchState
-    ? (watchImage.src = imageUrl)
-    : (watchImage.src = imageActiveUrl)
+  if (watchState) {
+    watchImage.src = watchDisabledIcon
+    text.innerText = 'stop watching'
+    applyStylesFromObj(iconContainerStylesDanger, iconContainer)
+  } else {
+    watchImage.src = watchIcon
+    text.innerText = 'watch'
+    applyStylesFromObj(iconContainerStylesPrimary, iconContainer)
+  }
 
-  watchImage.onload = function () { // injecting svg inline for customization (themes)
+  watchImage.onload = function () {
     SVGInject(this, {
-      afterLoad: (svg) => { applyStylesFromObj(iconStyles, svg) }
+      afterLoad: svg => {
+        applyStylesFromObj(iconStyles, svg)
+      }
     })
   }
 }
 
-// init
-toggleIcon()
-
-// toggle event listener on container
-iconContainer.addEventListener('click', (e) => {
-  watchState = !watchState
+export async function init () {
+  watchState = await isWatching()
   toggleIcon()
-})
-
-// styles adding
-applyStylesFromObj(iconContainerStyles, iconContainer)
-applyStylesFromObj(releasesHeaderStyles, releasesHeader)
-
-// adding to page
-releasesHeader.insertBefore(iconContainer, releasesHeader.childNodes[0])
+}
