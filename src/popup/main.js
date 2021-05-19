@@ -11,7 +11,9 @@ import {
   Collapse,
   CollapseItem,
   RadioGroup,
-  RadioButton
+  RadioButton,
+  Badge,
+  Pagination
 } from 'element-ui'
 
 const components = {
@@ -23,7 +25,9 @@ const components = {
   Collapse,
   CollapseItem,
   RadioGroup,
-  RadioButton
+  RadioButton,
+  Badge,
+  Pagination
 }
 
 Object.keys(components).forEach(key => {

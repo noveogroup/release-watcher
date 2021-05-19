@@ -16,7 +16,8 @@
     </div>
 
     <el-radio-group
-      v-model="radio1"
+      class="home__tags"
+      v-model="sortBy"
       size="mini"
     >
       <el-radio-button
@@ -29,11 +30,23 @@
     </el-radio-group>
 
     <TheReposList
-      v-if="formattedList.length"
-      :repos="formattedList"
-      @loadMore="loadMore"
+      v-if="currentPageItems.length"
+      :repos="currentPageItems"
       @onRemoveRepo="removeRepo($event)"
     />
+
+    <div>
+      {{ repos }}
+    </div>
+
+    <el-pagination
+      class="home__pagination"
+      layout="prev, pager, next"
+      :total="fetchedRepos.length"
+      :page-size="pagination.pageSize"
+      @current-change="onPageChange($event)"
+    />
+
   </div>
 </template>
 
@@ -60,9 +73,12 @@ export default {
     return {
       fetchedRepos: [],
 
-      currentCount: 10,
+      sortBy: null,
 
-      radio1: null,
+      pagination: {
+        page: 0,
+        pageSize: 5
+      },
 
       flags: {
         isFetching: false
@@ -71,10 +87,38 @@ export default {
   },
 
   computed: {
-    ...mapState(['currentURL']),
+    ...mapState([
+      'currentURL',
+      'repos'
+    ]),
 
-    formattedList () {
-      return this.fetchedRepos.slice(0, this.currentCount)
+    currentPageItems () {
+      const startIdx = this.pagination.page * this.pagination.pageSize
+      const endIdx = startIdx + this.pagination.pageSize
+
+      return this.sortedRepos.slice(startIdx, endIdx)
+    },
+
+    sortedRepos () {
+      if (!this.sortBy) return this.fetchedRepos
+
+      const newArr = [...this.fetchedRepos]
+
+      return newArr.sort((a, b) => {
+        const langA = a.language.toLowerCase()
+        const langB = b.language.toLowerCase()
+        const sortByTLC = this.sortBy.toLowerCase()
+
+        if (langA === sortByTLC && langB !== sortByTLC) {
+          return -1
+        }
+
+        if (langA !== sortByTLC && langB === sortByTLC) {
+          return 1
+        }
+
+        return 0
+      })
     },
 
     languagesTopics () {
@@ -84,20 +128,8 @@ export default {
 
   async created () {
     this.fetchedRepos = [...mock]
+    this.$store.dispatch('setRepos', mock)
     this.$store.dispatch('setCurrentURL', await getUrlFromExt())
-
-    const count = 100
-    const res = [...this.fetchedRepos]
-    const exampleItem = res[res.length - 1]
-
-    for (let i = 0; i < count; i++) {
-      res.push({
-        ...exampleItem,
-        id: exampleItem.id + i + 1
-      })
-    }
-
-    this.fetchedRepos = res
   },
 
   methods: {
@@ -118,8 +150,8 @@ export default {
       this.fetchedRepos.splice(idx, 1)
     },
 
-    loadMore () {
-      this.currentCount += 10
+    onPageChange (event) {
+      this.pagination.page = event - 1
     }
   }
 }
@@ -129,12 +161,23 @@ export default {
 .home {
   display: flex;
   flex-direction: column;
+  height: 100%;
 
   &__head {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 12px;
+  }
+
+  &__tags {
+    margin-bottom: 12px;
+  }
+
+  &__pagination {
+    margin-top: auto;
+    padding: 10px 0;
+    text-align: center;
   }
 }
 </style>

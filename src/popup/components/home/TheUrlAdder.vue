@@ -48,8 +48,9 @@ export default {
   }),
 
   methods: {
-    addUrl () {
-      this.$emit('onUrlAdd', this.urlInput)
+    async addUrl () {
+      // this.$emit('onUrlAdd', this.urlInput)
+      await this.$store.dispatch('setRepo', this.urlInput)
     }
   }
 }

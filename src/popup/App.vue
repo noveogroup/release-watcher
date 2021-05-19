@@ -1,17 +1,23 @@
 <template>
-  <router-view />
+  <router-view class="router-view"/>
 </template>
 
 <script>
-import RepoController from '../controllers/RepoController'
+import mock from './components/home/mock.json'
+import { mapState } from 'vuex'
 
 export default {
   name: 'App',
-  async mounted () {
+  computed: {
+    ...mapState([
+      'currentURL',
+      'repos'
+    ])
+  },
+
+  async created () {
     try {
-      const repos = new RepoController()
-      const all = await repos.getAll()
-      console.log(all)
+      await this.$store.dispatch('setRepos', mock)
     } catch (error) {
       console.error(error)
     }
@@ -19,14 +25,23 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 html {
   width: 400px;
-  height: 400px;
-}
+  height: 560px;
 
-body {
-  margin: 0;
-  padding: 14px 10px;
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    padding: 14px 10px;
+    height: 100%;
+  }
+
+  .router-view {
+    height: 100%;
+  }
 }
 </style>

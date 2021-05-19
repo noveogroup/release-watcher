@@ -1,5 +1,9 @@
 <template>
   <div>
+    <el-button
+      icon="el-icon-back"
+      @click="$router.replace('/')"
+    />
     <TheRepoToggle />
     repo id: {{ $route.params.id }}
   </div>

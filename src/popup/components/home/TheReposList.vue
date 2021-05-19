@@ -1,51 +1,50 @@
 <template>
   <div class="repo__list">
-    <div
+    <el-badge
       v-for="repo in repos"
       :key="repo.id"
-      class="repo__tab-wrap"
+      :value="200"
+      :max="99"
+      class="repo__row --unread"
     >
-      <div class="repo__tab">
+      <div class="repo__name">
         <span>
           {{ repo.name }}
         </span>
-
-        <div>
-          <el-button
-            size="small"
-            icon="el-icon-view"
-            @click="onRepoSelect(repo.id)"
-          />
-
-          <el-button
-            size="small"
-            icon="el-icon-delete"
-            @click="onDeleteClicking(repo.id)"
-          />
-        </div>
-
+        <p>
+          {{ repo.html_url }}
+        </p>
       </div>
 
-    </div>
+      <div class="repo__buttons">
+        <el-button
+          size="small"
+          icon="el-icon-view"
+          @click="onRepoSelect(repo.id)"
+        />
+
+        <el-button
+          size="small"
+          icon="el-icon-delete"
+          @click="onDeleteClicking(repo.id)"
+        />
+      </div>
+
+    </el-badge>
 
     <VConfirmPopup
       v-show="showConfirm"
       @onChange="onConfirmChange($event)"
     />
-
-    <VObserver @intersect="intersected" />
   </div>
 </template>
 
 <script>
-import VObserver from '../utils/VObserver'
-import VConfirmPopup from '../sharable/VConfirmPopup'
 
 export default {
   name: 'TheReposList',
   components: {
-    VObserver,
-    VConfirmPopup
+    VConfirmPopup: () => import('../sharable/VConfirmPopup')
   },
 
   data: () => ({
@@ -68,10 +67,6 @@ export default {
       this.$router.push(`/repo/${id}`)
     },
 
-    intersected () {
-      this.$emit('loadMore')
-    },
-
     onDeleteClicking (id) {
       this.deletingCandidate = id
       this.showConfirm = !this.showConfirm
@@ -90,17 +85,67 @@ export default {
 
 <style lang="scss" scoped>
 .repo {
-  &__list {
-    padding: 10px 8px;
+
+  &__row {
+    display: flex;
+    align-content: center;
+    padding: 12px;
+    border-radius: 4px;
+    border-bottom: 1px solid #ebeef5;
+
+    &.--unread {
+      background-color: rgba(245, 108, 108, 0.1);
+    }
+
+    &:first-child {
+      border-top: 1px solid #ebeef5;
+    }
+
+    &:not(:last-child) {
+      margin-bottom: 8px;
+    }
+
+    ::v-deep {
+      .el-badge__content {
+        top: 0;
+        right: 33px;
+      }
+    }
   }
 
-  &__tab {
+  &__name {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
 
-    &-wrap {
-      position: relative;
-      cursor: pointer;
+    & > span {
+      font-size: 16px;
+    }
+
+    & > p {
+      all: unset;
+      margin-top: 4px;
+      opacity: 0.4;
+      font-size: 10px;
+    }
+  }
+
+  &__buttons {
+    padding-left: 10px;
+    margin-left: auto;
+
+    ::v-deep {
+      .el-button {
+        margin: 0;
+
+        &:first-child {
+          border-radius: 3px 0 0 3px;
+          border-right: none;
+        }
+
+        &:last-child {
+          border-radius: 0 3px 3px 0;
+        }
+      }
     }
   }
 }
