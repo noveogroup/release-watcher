@@ -48,9 +48,8 @@ export default {
   }),
 
   methods: {
-    async addUrl () {
-      // this.$emit('onUrlAdd', this.urlInput)
-      await this.$store.dispatch('setRepo', this.urlInput)
+    addUrl () {
+      this.$emit('onUrlAdd', this.urlInput)
     }
   }
 }
@@ -74,6 +73,7 @@ export default {
 }
 
 .button {
+  height: 100%;
   border-radius: 0 3px 3px 0;
 }
 </style>

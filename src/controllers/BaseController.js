@@ -43,7 +43,7 @@ export default class BaseController {
    * @param {Number} perPage - The per page, default 25.
    * @returns {Promise<Model[]|Error>} - Get all record in the database or error
    */
-  async getAll (page = 1, perPage = 25) {
+  async getAll (page = 1, perPage = 2) {
     try {
       const { db, tableName } = this
       const tables = await db.connect()
@@ -75,7 +75,7 @@ export default class BaseController {
 
       const total = await tables[tableName].count()
 
-      const baseFiels = {
+      const baseFields = {
         uuid: uuidv4(),
         index: total + 1,
         created_at: new Date(),
@@ -85,7 +85,7 @@ export default class BaseController {
       }
 
       const data = {
-        ...baseFiels,
+        ...baseFields,
         ...(isObject(payload) ? payload : {})
       }
 

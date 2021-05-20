@@ -4,14 +4,19 @@ import {
 
 import axios from 'axios'
 
-import { add } from '../utils/dbMethods'
+import {
+  addRepo,
+  removeRepo,
+  getAllRepos
+} from '../utils/dbMethods'
 
 import { baseApiUrl } from '../constants'
 
 const {
   SET_CURRENT_URL,
   SET_REPOS,
-  SET_REPO
+  SET_REPO,
+  REMOVE_REPO
 } = mutationsVars
 
 export default {
@@ -19,20 +24,41 @@ export default {
     commit(SET_CURRENT_URL, url)
   },
 
-  setRepos ({ commit }, payload) {
-    commit(SET_REPOS, payload)
+  async setRepos ({ commit }, sortBy) {
+    try {
+      commit(SET_REPOS, await getAllRepos())
+    } catch (e) {
+      console.log('store actions / setRepos', e)
+    }
   },
 
   async setRepo ({ commit }, addingUrl) {
-    console.log('sssss', baseApiUrl + addingUrl)
-    const res = await axios.get(baseApiUrl + addingUrl)
+    try {
+      const res = await axios.get(baseApiUrl + addingUrl)
 
-    console.log('res', res)
-    const { id, url, name } = res.data
+      const { id, url, name, language } = res.data
 
-    const dbRes = await add(id.toString(), url, name)
-    console.log('dbRes', dbRes)
+      const data = {
+        id: id.toString(),
+        url,
+        name,
+        language
+      }
 
-    commit(SET_REPO, dbRes)
+      const dbRes = await addRepo(data)
+
+      commit(SET_REPO, dbRes)
+    } catch (e) {
+      console.log('store actions / setRepo', e)
+    }
+  },
+
+  async removeRepo ({ commit }, id) {
+    try {
+      const res = await removeRepo(id)
+      if (res) { commit(REMOVE_REPO, id) }
+    } catch (e) {
+      console.log('store actions / removeRepo')
+    }
   }
 }

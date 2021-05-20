@@ -16,6 +16,10 @@ export default class RepoModel extends BaseModel {
         type: String,
         required: true
       },
+      language: {
+        type: String,
+        required: true
+      },
       disabled: {
         type: Boolean,
         required: false

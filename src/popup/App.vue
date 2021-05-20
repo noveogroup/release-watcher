@@ -3,21 +3,16 @@
 </template>
 
 <script>
-import mock from './components/home/mock.json'
-import { mapState } from 'vuex'
+import { getUrlFromExt } from '../utils/urlWorkers'
 
 export default {
   name: 'App',
-  computed: {
-    ...mapState([
-      'currentURL',
-      'repos'
-    ])
-  },
 
   async created () {
+    this.$store.dispatch('setCurrentURL', await getUrlFromExt())
+
     try {
-      await this.$store.dispatch('setRepos', mock)
+      await this.$store.dispatch('setRepos')
     } catch (error) {
       console.error(error)
     }

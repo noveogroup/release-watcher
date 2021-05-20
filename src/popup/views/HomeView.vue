@@ -5,15 +5,10 @@
       Release watcher
     </h1>
 
-    <div class="home__head">
-      <TheUrlAdder @urlAdded="addUrl($event)"/>
-
-<!--      <TheWatchItem-->
-<!--        class="addRepo-btn"-->
-<!--        :is-fetching="flags.isFetching"-->
-<!--        @onAddBtnClick="addItem('/vuejs/vue')"-->
-<!--      />-->
-    </div>
+    <TheUrlAdder
+      class="home__head"
+      @onUrlAdd="onUrlAdded($event)"
+    />
 
     <el-radio-group
       class="home__tags"
@@ -30,20 +25,18 @@
     </el-radio-group>
 
     <TheReposList
-      v-if="currentPageItems.length"
+      v-if="repos"
       :repos="currentPageItems"
-      @onRemoveRepo="removeRepo($event)"
+      @onRemoveRepo="onRemoveRepo($event)"
     />
 
-    <div>
-      {{ repos }}
-    </div>
-
     <el-pagination
+      v-if="repos"
       class="home__pagination"
       layout="prev, pager, next"
-      :total="fetchedRepos.length"
+      :total="repos.length"
       :page-size="pagination.pageSize"
+      :hide-on-single-page='true'
       @current-change="onPageChange($event)"
     />
 
@@ -51,37 +44,23 @@
 </template>
 
 <script>
-// import TheWatchItem from '../components/home/TheWatchItem'
-import TheReposList from '../components/home/TheReposList'
 import TheUrlAdder from '../components/home/TheUrlAdder'
-
-import mock from '../components/home/mock.json'
 
 import { mapState } from 'vuex'
 
-import { fetchRepo } from '../../axios'
-import { getUrlFromExt } from '../../utils/urlWorkers'
-
 export default {
   components: {
-    // TheWatchItem,
-    TheReposList,
+    TheReposList: () => import('../components/home/TheReposList'),
     TheUrlAdder
   },
 
   data () {
     return {
-      fetchedRepos: [],
-
       sortBy: null,
 
       pagination: {
         page: 0,
         pageSize: 5
-      },
-
-      flags: {
-        isFetching: false
       }
     }
   },
@@ -96,15 +75,13 @@ export default {
       const startIdx = this.pagination.page * this.pagination.pageSize
       const endIdx = startIdx + this.pagination.pageSize
 
-      return this.sortedRepos.slice(startIdx, endIdx)
+      return this.sortedRepos?.slice(startIdx, endIdx)
     },
 
     sortedRepos () {
-      if (!this.sortBy) return this.fetchedRepos
+      if (!this.sortBy) return this.repos
 
-      const newArr = [...this.fetchedRepos]
-
-      return newArr.sort((a, b) => {
+      return [...this.repos].sort((a, b) => {
         const langA = a.language.toLowerCase()
         const langB = b.language.toLowerCase()
         const sortByTLC = this.sortBy.toLowerCase()
@@ -122,32 +99,18 @@ export default {
     },
 
     languagesTopics () {
-      return [...new Set(this.fetchedRepos.map(e => e.language))]
+      return [...new Set(this.repos?.map(e => e.language))]
     }
   },
 
-  async created () {
-    this.fetchedRepos = [...mock]
-    this.$store.dispatch('setRepos', mock)
-    this.$store.dispatch('setCurrentURL', await getUrlFromExt())
-  },
-
   methods: {
-    async addItem (item) {
-      this.flags.isFetching = true
 
-      try {
-        this.fetchedRepos.push(await fetchRepo(item))
-      } catch (e) {
-        console.log('addItem error', e)
-      } finally {
-        this.flags.isFetching = false
-      }
+    async onRemoveRepo (id) {
+      await this.$store.dispatch('removeRepo', id)
     },
 
-    removeRepo (id) {
-      const idx = this.fetchedRepos.indexOf(this.fetchedRepos.find(e => e.id === id))
-      this.fetchedRepos.splice(idx, 1)
+    async onUrlAdded (id) {
+      await this.$store.dispatch('setRepo', id)
     },
 
     onPageChange (event) {
@@ -162,6 +125,10 @@ export default {
   display: flex;
   flex-direction: column;
   height: 100%;
+
+  & > h1 {
+    margin-top: 0;
+  }
 
   &__head {
     display: flex;

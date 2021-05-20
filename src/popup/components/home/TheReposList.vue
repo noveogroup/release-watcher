@@ -12,7 +12,7 @@
           {{ repo.name }}
         </span>
         <p>
-          {{ repo.html_url }}
+          {{ repo.url }}
         </p>
       </div>
 

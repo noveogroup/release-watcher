@@ -2,30 +2,28 @@ import RepoController from '@/controllers/RepoController'
 import { v4 as uuid } from 'uuid'
 // import { baseApiUrl } from '@/constants'
 
-export const add = async (id, url, name) => {
+export const addRepo = async (repo) => {
   try {
     const controller = new RepoController()
     return await controller.create({
       uuid: uuid(),
-      id,
-      url,
-      name
+      ...repo
     })
   } catch (error) {
-    console.error('dbMethods / add / error', error)
+    console.error('dbMethods / addRepo', error)
   }
 }
 
-export const getAll = async () => {
+export const getAllRepos = async () => {
   try {
     const controller = new RepoController()
     return await controller.getAll()
-  } catch (e) {
-    console.log('dbMethods / getAll / error')
+  } catch (error) {
+    console.log('dbMethods / getAllRepos', error)
   }
 }
 
-export const remove = async (id) => {
+export const removeRepo = async (id) => {
   try {
     const controller = new RepoController()
     return await controller.delete(id)
