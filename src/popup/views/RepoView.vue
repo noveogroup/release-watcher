@@ -6,16 +6,28 @@
     />
     <TheRepoToggle />
     repo id: {{ $route.params.id }}
+    {{ releases }}
   </div>
 </template>
 
 <script>
 import TheRepoToggle from '../components/repo/TheRepoToggle'
+import { mapState } from 'vuex'
 
 export default {
   name: 'RepoView',
   components: {
     TheRepoToggle
+  },
+
+  computed: {
+    ...mapState([
+      'releases'
+    ])
+  },
+
+  async created () {
+    this.$store.dispatch('setReleases', this.$route.params.id.toString())
   }
 }
 </script>

@@ -1,8 +1,11 @@
 import RepoController from '@/controllers/RepoController'
+import ReleaseController from '@/controllers/ReleaseController'
+
 import { v4 as uuid } from 'uuid'
 // import { baseApiUrl } from '@/constants'
 
-export const addRepo = async (repo) => {
+// repos methods
+export const addRepoToDB = async (repo) => {
   try {
     const controller = new RepoController()
     return await controller.create({
@@ -14,7 +17,16 @@ export const addRepo = async (repo) => {
   }
 }
 
-export const getAllRepos = async () => {
+export const removeRepoFromDB = async (id) => {
+  try {
+    const controller = new RepoController()
+    return await controller.delete(id)
+  } catch (error) {
+    console.error('dbMethods / removeRepo', error)
+  }
+}
+
+export const getAllReposFromDB = async () => {
   try {
     const controller = new RepoController()
     return await controller.getAll()
@@ -23,21 +35,34 @@ export const getAllRepos = async () => {
   }
 }
 
-export const removeRepo = async (id) => {
+// releases methods
+
+export const addReleaseToDB = async (release) => {
   try {
-    const controller = new RepoController()
-    return await controller.delete(id)
+    const controller = new ReleaseController()
+    return await controller.create({
+      uuid: uuid(),
+      ...release
+    })
   } catch (error) {
-    console.error('db remove error', error)
+    console.log('dbMethods / addRelease', error)
   }
 }
 
-export const findId = async (id) => {
+export const removeReleaseFromDB = async (id) => {
   try {
-    const controller = new RepoController()
-    const res = await controller.getOne(id)
-    return !!res
+    const controller = new ReleaseController()
+    return await controller.deleteReleasesByRepoID(id)
   } catch (error) {
-    console.error('db erorr', error)
+    console.log('dbMethods / removeRelease', error)
+  }
+}
+
+export const getReleaseFromDB = async (repoId) => {
+  try {
+    const controller = new ReleaseController()
+    return await controller.getReleasesByRepoID(repoId)
+  } catch (error) {
+    console.log('dbMethods / getReleasesByRepoId', error)
   }
 }

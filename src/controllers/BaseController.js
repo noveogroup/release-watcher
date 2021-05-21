@@ -43,7 +43,7 @@ export default class BaseController {
    * @param {Number} perPage - The per page, default 25.
    * @returns {Promise<Model[]|Error>} - Get all record in the database or error
    */
-  async getAll (page = 1, perPage = 2) {
+  async getAll (page = 1, perPage = 25) {
     try {
       const { db, tableName } = this
       const tables = await db.connect()

@@ -1,7 +1,7 @@
 export default {
-  repos: null,
+  repos: null, // current part of all repos (or all of them if <=5)
 
-  addingRepo: null,
+  releases: null, // releases of current chosen repo
 
   currentURL: null
 }

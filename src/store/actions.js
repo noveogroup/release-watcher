@@ -5,18 +5,25 @@ import {
 import axios from 'axios'
 
 import {
-  addRepo,
-  removeRepo,
-  getAllRepos
+  addRepoToDB,
+  removeRepoFromDB,
+  getAllReposFromDB,
+  addReleaseToDB,
+  removeReleaseFromDB,
+  getReleaseFromDB
 } from '../utils/dbMethods'
 
 import { baseApiUrl } from '../constants'
 
 const {
   SET_CURRENT_URL,
+  //
   SET_REPOS,
   SET_REPO,
-  REMOVE_REPO
+  REMOVE_REPO,
+  //
+  SET_RELEASES,
+  REMOVE_RELEASES
 } = mutationsVars
 
 export default {
@@ -24,15 +31,16 @@ export default {
     commit(SET_CURRENT_URL, url)
   },
 
+  // repos
   async setRepos ({ commit }, sortBy) {
     try {
-      commit(SET_REPOS, await getAllRepos())
+      commit(SET_REPOS, await getAllReposFromDB())
     } catch (e) {
       console.log('store actions / setRepos', e)
     }
   },
 
-  async setRepo ({ commit }, addingUrl) {
+  async setRepo ({ commit, dispatch }, addingUrl) {
     try {
       const res = await axios.get(baseApiUrl + addingUrl)
 
@@ -45,7 +53,12 @@ export default {
         language
       }
 
-      const dbRes = await addRepo(data)
+      const dbRes = await addRepoToDB(data)
+
+      await dispatch('setRelease', {
+        repoId: id,
+        addingUrl: `${addingUrl}/releases`
+      })
 
       commit(SET_REPO, dbRes)
     } catch (e) {
@@ -53,12 +66,61 @@ export default {
     }
   },
 
-  async removeRepo ({ commit }, id) {
+  async deleteRepo ({ commit, dispatch }, repoId) {
     try {
-      const res = await removeRepo(id)
-      if (res) { commit(REMOVE_REPO, id) }
+      await removeRepoFromDB(repoId)
+
+      commit(REMOVE_REPO, repoId)
+      await dispatch('deleteReleases', repoId)
     } catch (e) {
-      console.log('store actions / removeRepo')
+      console.log('store actions / deleteRepo')
+    }
+  },
+
+  // releases
+  async setReleases ({ commit }, repoId) {
+    try {
+      commit(SET_RELEASES, await getReleaseFromDB(repoId))
+    } catch (e) {
+      console.log('store actions / setReleases', e)
+    }
+  },
+
+  async setRelease ({ commit }, options) {
+    const { repoId, addingUrl } = options
+
+    try {
+      const res = await axios.get(baseApiUrl + addingUrl)
+
+      const formatted = [...res.data].map(release => {
+        const { id, name, body } = release
+        return {
+          repoId: repoId?.toString(),
+          id: id?.toString(),
+          url: release.html_url,
+          name,
+          version: release.tag_name,
+          body
+        }
+      })
+
+      const add = async (release) => {
+        await addReleaseToDB(release)
+      }
+
+      formatted.forEach(add)
+    } catch (e) {
+      console.log('store actions / setRelease', e)
+    }
+  },
+
+  async deleteReleases ({ commit }, repoId) {
+    try {
+      await removeReleaseFromDB(repoId)
+      commit(REMOVE_RELEASES, repoId)
+    } catch (error) {
+      console.log('store actions / deleteReleases', error)
     }
   }
+
 }

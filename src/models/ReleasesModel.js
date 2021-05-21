@@ -14,16 +14,16 @@ export default class RepoModel extends BaseModel {
       },
       name: {
         type: String,
-        required: true
+        required: false
       },
       version: {
-        type: Boolean,
-        required: true
-      },
-      author: {
         type: String,
         required: true
       },
+      // author: {
+      //   type: String,
+      //   required: true
+      // },
       body: {
         type: String,
         required: true
