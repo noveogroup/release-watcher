@@ -10,8 +10,8 @@ export const checkReleases = async (repo, initMode = false) => {
   res.forEach(async release => {
     try {
       await releaseController.create({
-        id: parseInt(release.id),
-        repoId: parseInt(repo.id),
+        id: release.id,
+        repoId: repo.id,
         name: repo.name,
         author: release.author?.login || 'no author',
         body: release.body,

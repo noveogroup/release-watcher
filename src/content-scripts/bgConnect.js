@@ -2,10 +2,11 @@ import { baseApiUrl } from '@/constants'
 
 const url = baseApiUrl + window.location.pathname + '/releases'
 const name = window.location.pathname.split('/')[2]
-const id = document
-  .querySelector("meta[name='octolytics-dimension-repository_id']")
-  ?.getAttribute('content')
-  ?.toString()
+const id = parseInt(
+  document
+    .querySelector("meta[name='octolytics-dimension-repository_id']")
+    ?.getAttribute('content')
+)
 
 const getMostPopularLanguage = () => {
   try {

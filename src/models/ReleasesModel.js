@@ -4,6 +4,10 @@ import { RELEASES_TABLE_NAME, PRIMARY_KEY } from '../db/constants'
 export default class ReleaseModel extends BaseModel {
   constructor () {
     super(RELEASES_TABLE_NAME, {
+      id: {
+        type: Number,
+        required: true
+      },
       repoId: {
         type: Number,
         required: true
