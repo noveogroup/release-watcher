@@ -1,11 +1,11 @@
 import BaseModel from './BaseModel'
 import { RELEASES_TABLE_NAME, PRIMARY_KEY } from '../db/constants'
 
-export default class RepoModel extends BaseModel {
+export default class ReleaseModel extends BaseModel {
   constructor () {
     super(RELEASES_TABLE_NAME, {
       repoId: {
-        type: String,
+        type: Number,
         required: true
       },
       url: {
