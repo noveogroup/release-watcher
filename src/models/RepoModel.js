@@ -5,7 +5,7 @@ export default class RepoModel extends BaseModel {
   constructor () {
     super(REPOS_TABLE_NAME, {
       id: {
-        type: String,
+        type: Number,
         required: true
       },
       url: {
