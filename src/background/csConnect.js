@@ -1,4 +1,5 @@
 import RepoController from '@/controllers/RepoController'
+import { checkReleases } from './checkReleases'
 
 chrome.runtime.onMessage.addListener(async function (
   request,
@@ -23,6 +24,7 @@ chrome.runtime.onMessage.addListener(async function (
       if (request.isAdding) {
         delete request.isAdding
         await repoController.create(request)
+        checkReleases(request, true)
       } else {
         await repoController.delete(request.id)
       }

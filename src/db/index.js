@@ -7,6 +7,7 @@ import {
 
 import RepoModel from '../models/RepoModel'
 import ReleasesModel from '../models/ReleasesModel'
+import SettingsModel from '../models/SettingsModel'
 
 const {
   table: reposTable,
@@ -16,14 +17,20 @@ const {
   table: releasesTable,
   migration: releasesMigration
 } = new ReleasesModel()
+const {
+  table: settingsTable,
+  migration: settingsMigration
+} = new SettingsModel()
 
 const tables = [
   reposTable,
-  releasesTable
+  releasesTable,
+  settingsTable
 ]
 const migrations = [
   reposMigration,
-  releasesMigration
+  releasesMigration,
+  settingsMigration
 ]
 
 const settings = {
