@@ -1,6 +1,9 @@
 <template>
   <div class="TheReleasesList">
-    <el-collapse :value="expanded">
+    <el-collapse
+      :value="expanded"
+      @change="onCollapseChange($event)"
+    >
       <TheReleasesRow
         v-for="release in releases"
         :key="release.id"
@@ -44,6 +47,17 @@ export default {
 
     expanded () {
       return this.isAllExpanded ? this.allReleasesIds : this.expandedReleases
+    }
+  },
+
+  methods: {
+    onCollapseChange (val) {
+      const showedRelease = this.getReleaseById(val[val.length - 1])
+      this.$store.dispatch('updateRelease', showedRelease)
+    },
+
+    getReleaseById (id) {
+      return this.releases.find(release => +release.id === +id)
     }
   }
 }

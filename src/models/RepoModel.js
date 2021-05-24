@@ -16,6 +16,7 @@ export default class RepoModel extends BaseModel {
         type: String,
         required: true
       },
+      // most popular coding language of repo
       language: {
         type: String,
         required: true

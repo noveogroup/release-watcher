@@ -63,7 +63,6 @@ export default {
   methods: {
 
     onRepoSelect (id) {
-      console.log(id)
       this.$router.push(`/repo/${id}`)
     },
 

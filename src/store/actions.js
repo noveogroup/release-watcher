@@ -10,7 +10,8 @@ import {
   getAllReposFromDB,
   addReleaseToDB,
   removeReleaseFromDB,
-  getReleaseFromDB
+  getReleaseFromDB,
+  updateReleaseInDB
 } from '../utils/dbMethods'
 
 import { baseApiUrl } from '../constants'
@@ -23,7 +24,8 @@ const {
   REMOVE_REPO,
   //
   SET_RELEASES,
-  REMOVE_RELEASES
+  REMOVE_RELEASES,
+  UPDATE_RELEASE
 } = mutationsVars
 
 export default {
@@ -100,7 +102,8 @@ export default {
           url: release.html_url,
           name,
           version: release.tag_name,
-          body
+          body,
+          new: true
         }
       })
 
@@ -120,6 +123,15 @@ export default {
       commit(REMOVE_RELEASES, repoId)
     } catch (error) {
       console.log('store actions / deleteReleases', error)
+    }
+  },
+
+  async updateRelease ({ commit }, updatedRelease) {
+    try {
+      await updateReleaseInDB(updatedRelease.uuid, updatedRelease)
+      commit(UPDATE_RELEASE, updatedRelease)
+    } catch (error) {
+      console.log('store actions / updateRelease', error)
     }
   }
 

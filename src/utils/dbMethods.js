@@ -13,7 +13,7 @@ export const addRepoToDB = async (repo) => {
       ...repo
     })
   } catch (error) {
-    console.error('dbMethods / addRepo', error)
+    console.error('dbMethods / addRepoToDB', error)
   }
 }
 
@@ -22,7 +22,7 @@ export const removeRepoFromDB = async (id) => {
     const controller = new RepoController()
     return await controller.delete(id)
   } catch (error) {
-    console.error('dbMethods / removeRepo', error)
+    console.error('dbMethods / removeRepoFromDB', error)
   }
 }
 
@@ -31,7 +31,7 @@ export const getAllReposFromDB = async () => {
     const controller = new RepoController()
     return await controller.getAll()
   } catch (error) {
-    console.log('dbMethods / getAllRepos', error)
+    console.log('dbMethods / getAllReposFromDB', error)
   }
 }
 
@@ -45,7 +45,7 @@ export const addReleaseToDB = async (release) => {
       ...release
     })
   } catch (error) {
-    console.log('dbMethods / addRelease', error)
+    console.log('dbMethods / addReleaseToDB', error)
   }
 }
 
@@ -54,7 +54,7 @@ export const removeReleaseFromDB = async (id) => {
     const controller = new ReleaseController()
     return await controller.deleteReleasesByRepoID(id)
   } catch (error) {
-    console.log('dbMethods / removeRelease', error)
+    console.log('dbMethods / removeReleaseFromDB', error)
   }
 }
 
@@ -63,6 +63,15 @@ export const getReleaseFromDB = async (repoId) => {
     const controller = new ReleaseController()
     return await controller.getReleasesByRepoID(repoId)
   } catch (error) {
-    console.log('dbMethods / getReleasesByRepoId', error)
+    console.log('dbMethods / getReleaseFromDB', error)
+  }
+}
+
+export const updateReleaseInDB = async (primaryKey, payload) => {
+  try {
+    const controller = new ReleaseController()
+    return await controller.update(primaryKey, payload)
+  } catch (error) {
+    console.log('dbMethods / updateReleaseInDB', error)
   }
 }

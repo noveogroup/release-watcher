@@ -5,7 +5,8 @@ const mutationNames = [
   'REMOVE_REPO',
   'SET_RELEASES',
   'SET_RELEASE',
-  'REMOVE_RELEASES'
+  'REMOVE_RELEASES',
+  'UPDATE_RELEASE'
 ]
 
 export const mutationsVars = mutationNames.reduce((acc, curr) => {
