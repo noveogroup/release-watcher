@@ -1,7 +1,7 @@
 import { RELEASE_CHECK_ALARM_NAME, defaultRequestInterval } from '@/constants'
 import RepoController from '@/controllers/RepoController'
 import ReleaseController from '@/controllers/ReleaseController'
-import { fetchRepo } from '@/axios'
+import api from '@/api/github'
 import { isArray } from '@/utils/typeChecker'
 
 chrome.runtime.onInstalled.addListener(reason => {
@@ -17,7 +17,7 @@ chrome.alarms.onAlarm.addListener(async alarm => {
 
   const repos = await repoController.getActiveRepos()
   repos.forEach(async repo => {
-    const res = await fetchRepo(repo.url)
+    const res = await api.fetchWithoutBase(repo.url)
     if (!isArray(res)) return
     res.forEach(async release => {
       try {
