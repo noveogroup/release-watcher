@@ -17,4 +17,20 @@ export default class RepoController extends BaseController {
       return Promise.reject(error)
     }
   }
+
+  async incrementNewReleasesCount (id, increment = 1) {
+    try {
+      const tables = await this.db.connect()
+      const repo = await tables[REPOS_TABLE_NAME].find(id)
+      const res = tables[REPOS_TABLE_NAME].update({
+        ...repo,
+        newReleasesCount: repo.newReleasesCount + increment
+      })
+
+      return Promise.resolve(res)
+    } catch (error) {
+      console.log(error)
+      return Promise.reject(error)
+    }
+  }
 }

@@ -7,7 +7,7 @@ import {
 } from '../constants'
 import SettingsModel from '../models/SettingsModel'
 
-export default class RepoController extends BaseController {
+export default class SettingsController extends BaseController {
   constructor () {
     super(SETTINGS_TABLE_NAME, new SettingsModel())
   }
