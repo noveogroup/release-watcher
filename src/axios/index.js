@@ -1,11 +1,8 @@
-import axios from 'axios'
-
-// TODO: Need - export default axios.create() with default settings
-const instance = axios.create()
+import axios from './instance'
 
 export const fetchRepo = async (url) => {
   try {
-    const res = await instance.get(url)
+    const res = await axios.get(url)
     console.log(res)
     return res.data
   } catch (e) {

@@ -7,12 +7,12 @@ export default class RepoController extends BaseController {
     super(REPOS_TABLE_NAME, new RepoModel())
   }
 
-  async getActiveReposUrls () {
+  async getActiveRepos () {
     try {
       const tables = await this.db.connect()
       const res = await tables[REPOS_TABLE_NAME].where('disabled', false).all()
 
-      return Promise.resolve(res.map((repo) => repo.url))
+      return Promise.resolve(res)
     } catch (error) {
       return Promise.reject(error)
     }

@@ -1,5 +1,5 @@
 import BaseModel from './BaseModel'
-import { RELEASES_TABLE_NAME } from '../db/constants'
+import { RELEASES_TABLE_NAME, PRIMARY_KEY } from '../db/constants'
 
 export default class RepoModel extends BaseModel {
   constructor () {
@@ -16,8 +16,12 @@ export default class RepoModel extends BaseModel {
         type: String,
         required: true
       },
-      version: {
+      new: {
         type: Boolean,
+        required: true
+      },
+      version: {
+        type: String,
         required: true
       },
       author: {
@@ -28,6 +32,8 @@ export default class RepoModel extends BaseModel {
         type: String,
         required: true
       }
-    })
+    },
+    PRIMARY_KEY
+    )
   }
 }
