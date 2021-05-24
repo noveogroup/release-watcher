@@ -24,7 +24,7 @@ const routes = [
         path: '/repo/:id',
         component: () =>
           import(
-            /* webpackChunkName: "RepoPage" */ '../views/RepoView.vue'
+            /* webpackChunkName: "RepoPage" */ '../views/ReleasesView.vue'
           )
       }
     ]

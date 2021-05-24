@@ -1,11 +1,11 @@
 <template>
   <div class="TheHeader">
     <span>
-      Show release notes
+      Show all releases
     </span>
     <el-switch
-      v-model="kekw"
-      @change="meow"
+      :value="value"
+      @change="$emit('onChange', $event)"
     />
   </div>
 </template>
@@ -14,15 +14,10 @@
 export default {
   name: 'TheHeader',
 
-  data () {
-    return {
-      kekw: false
-    }
-  },
-
-  methods: {
-    meow () {
-      console.log('meoasdasdasd')
+  props: {
+    value: {
+      type: Boolean,
+      default: false
     }
   }
 }
@@ -30,6 +25,8 @@ export default {
 
 <style lang="scss" scoped>
   .TheHeader {
+    padding-top: 10px;
+
     & > span {
       margin-right: 5px;
     }

@@ -13,7 +13,8 @@ import {
   RadioGroup,
   RadioButton,
   Badge,
-  Pagination
+  Pagination,
+  Slider
 } from 'element-ui'
 
 const components = {
@@ -27,7 +28,8 @@ const components = {
   RadioGroup,
   RadioButton,
   Badge,
-  Pagination
+  Pagination,
+  Slider
 }
 
 Object.keys(components).forEach(key => {

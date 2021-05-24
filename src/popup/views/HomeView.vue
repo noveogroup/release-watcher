@@ -3,6 +3,11 @@
 
     <h1>
       Release watcher
+      <el-button
+        size="small"
+        icon="el-icon-s-tools"
+        @click="$router.push('/settings')"
+      />
     </h1>
 
     <TheUrlAdder
@@ -127,6 +132,9 @@ export default {
   height: 100%;
 
   & > h1 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     margin-top: 0;
   }
 
