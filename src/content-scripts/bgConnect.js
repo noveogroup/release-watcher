@@ -42,7 +42,8 @@ export const updateRepo = isAdding => {
       id,
       url,
       name,
-      language: getMostPopularLanguage()
+      language: getMostPopularLanguage(),
+      newReleasesCount: 0
     },
     function (response) {
       console.log(response)
