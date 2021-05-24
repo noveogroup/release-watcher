@@ -26,7 +26,7 @@ const baseColumns = {
   },
   deleted: {
     type: Boolean,
-    require: false
+    required: false
   }
 }
 

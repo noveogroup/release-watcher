@@ -21,12 +21,8 @@ chrome.runtime.onMessage.addListener(async function (
   if (request.requestType === 'updateRepo') {
     try {
       if (request.isAdding) {
-        await repoController.create({
-          id: request.id,
-          name: request.name,
-          url: request.url,
-          disabled: false
-        })
+        delete request.isAdding
+        await repoController.create(request)
       } else {
         await repoController.delete(request.id)
       }
