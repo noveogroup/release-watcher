@@ -56,7 +56,7 @@ export default {
   },
 
   async created () {
-    this.$store.dispatch('setReleases', this.$route.params.id.toString())
+    await this.$store.dispatch('setReleases', this.$route.params.id.toString())
   },
 
   methods: {

@@ -49,7 +49,7 @@ export default {
       const { id, url, name, language } = res.data
 
       const data = {
-        id: id.toString(),
+        id,
         url,
         name,
         language
@@ -97,8 +97,8 @@ export default {
       const formatted = [...res.data].map(release => {
         const { id, name, body } = release
         return {
-          repoId: repoId?.toString(),
-          id: id?.toString(),
+          repoId,
+          id,
           url: release.html_url,
           name,
           version: release.tag_name,

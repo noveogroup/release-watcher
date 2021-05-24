@@ -9,7 +9,7 @@ export default {
   name: 'App',
 
   async created () {
-    this.$store.dispatch('setCurrentURL', await getUrlFromExt())
+    await this.$store.dispatch('setCurrentURL', await getUrlFromExt())
 
     try {
       await this.$store.dispatch('setRepos')

@@ -1,5 +1,7 @@
 <template>
-  <div class="repo__list">
+  <div v-if="repos"
+       class="repo__list"
+  >
     <el-badge
       v-for="repo in repos"
       :key="repo.id"

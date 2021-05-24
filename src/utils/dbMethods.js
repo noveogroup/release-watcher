@@ -4,11 +4,13 @@ import ReleaseController from '@/controllers/ReleaseController'
 import { v4 as uuid } from 'uuid'
 // import { baseApiUrl } from '@/constants'
 
+const repController = new RepoController()
+const releaseController = new ReleaseController()
+
 // repos methods
 export const addRepoToDB = async (repo) => {
   try {
-    const controller = new RepoController()
-    return await controller.create({
+    return await repController.create({
       uuid: uuid(),
       ...repo
     })
@@ -19,8 +21,7 @@ export const addRepoToDB = async (repo) => {
 
 export const removeRepoFromDB = async (id) => {
   try {
-    const controller = new RepoController()
-    return await controller.delete(id)
+    return await repController.delete(id)
   } catch (error) {
     console.error('dbMethods / removeRepoFromDB', error)
   }
@@ -28,8 +29,7 @@ export const removeRepoFromDB = async (id) => {
 
 export const getAllReposFromDB = async () => {
   try {
-    const controller = new RepoController()
-    return await controller.getAll()
+    return await repController.getAll()
   } catch (error) {
     console.log('dbMethods / getAllReposFromDB', error)
   }
@@ -39,8 +39,7 @@ export const getAllReposFromDB = async () => {
 
 export const addReleaseToDB = async (release) => {
   try {
-    const controller = new ReleaseController()
-    return await controller.create({
+    return await releaseController.create({
       uuid: uuid(),
       ...release
     })
@@ -51,8 +50,7 @@ export const addReleaseToDB = async (release) => {
 
 export const removeReleaseFromDB = async (id) => {
   try {
-    const controller = new ReleaseController()
-    return await controller.deleteReleasesByRepoID(id)
+    return await releaseController.deleteReleasesByRepoID(id)
   } catch (error) {
     console.log('dbMethods / removeReleaseFromDB', error)
   }
@@ -60,8 +58,7 @@ export const removeReleaseFromDB = async (id) => {
 
 export const getReleaseFromDB = async (repoId) => {
   try {
-    const controller = new ReleaseController()
-    return await controller.getReleasesByRepoID(repoId)
+    return await releaseController.getReleasesByRepoID(repoId)
   } catch (error) {
     console.log('dbMethods / getReleaseFromDB', error)
   }
@@ -69,8 +66,7 @@ export const getReleaseFromDB = async (repoId) => {
 
 export const updateReleaseInDB = async (primaryKey, payload) => {
   try {
-    const controller = new ReleaseController()
-    return await controller.update(primaryKey, payload)
+    await releaseController.update(primaryKey, payload)
   } catch (error) {
     console.log('dbMethods / updateReleaseInDB', error)
   }
