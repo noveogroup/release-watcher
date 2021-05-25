@@ -64,9 +64,9 @@ export const getReleaseFromDB = async (repoId) => {
   }
 }
 
-export const updateReleaseInDB = async (primaryKey, payload) => {
+export const updateReleaseInDB = async (payload) => {
   try {
-    await releaseController.update(primaryKey, payload)
+    await releaseController.update(payload.id, payload)
   } catch (error) {
     console.log('dbMethods / updateReleaseInDB', error)
   }

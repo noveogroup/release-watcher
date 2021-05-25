@@ -128,7 +128,7 @@ export default {
 
   async updateRelease ({ commit }, updatedRelease) {
     try {
-      await updateReleaseInDB(updatedRelease.uuid, updatedRelease)
+      await updateReleaseInDB(updatedRelease)
       commit(UPDATE_RELEASE, updatedRelease)
     } catch (error) {
       console.log('store actions / updateRelease', error)

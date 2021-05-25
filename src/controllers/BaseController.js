@@ -124,10 +124,15 @@ export default class BaseController {
         updated_at: new Date()
       }
 
+      console.log('data', data)
+
       const errors = model.validate(data)
+
+      console.log('errors', errors)
       if (errors.length) throw new Error(errors)
 
-      const result = await tables[tableName].save(primaryKeyValue, data)
+      const result = await tables[tableName].save(primaryKeyValue, data, true)
+      console.log('result', result)
 
       return Promise.resolve(result)
     } catch (error) {
