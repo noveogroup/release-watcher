@@ -3,5 +3,7 @@ export default {
 
   releases: null, // releases of current chosen repo
 
+  settings: null,
+
   currentURL: null
 }

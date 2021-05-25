@@ -1,7 +1,7 @@
 import BaseModel from './BaseModel'
 import { SETTINGS_TABLE_NAME, SETTINGS_PRIMARY_KEY } from '../db/constants'
 
-export default class RepoModel extends BaseModel {
+export default class SettingsModel extends BaseModel {
   constructor () {
     super(
       SETTINGS_TABLE_NAME,

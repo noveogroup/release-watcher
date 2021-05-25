@@ -18,6 +18,7 @@
           :step="5"
           show-stops
           class="interval__input"
+          @change="onSliderChange()"
         />
       </div>
 
@@ -42,6 +43,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   name: 'SettingsView',
 
@@ -63,7 +66,26 @@ export default {
   data: () => ({
     intervals: 0,
     notification: 0
-  })
+  }),
+
+  mounted () {
+    this.intervals = this.settings.requestInterval
+  },
+
+  computed: {
+    ...mapState([
+      'settings'
+    ])
+  },
+
+  methods: {
+    onSliderChange () {
+      this.$store.dispatch('updateSettings', {
+        ...this.settings,
+        requestInterval: this.intervals
+      })
+    }
+  }
 }
 </script>
 

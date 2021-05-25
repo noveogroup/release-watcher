@@ -1,11 +1,13 @@
 import RepoController from '@/controllers/RepoController'
 import ReleaseController from '@/controllers/ReleaseController'
+import SettingsController from '@/controllers/SettingsController'
 
 import { v4 as uuid } from 'uuid'
 // import { baseApiUrl } from '@/constants'
 
 const repController = new RepoController()
 const releaseController = new ReleaseController()
+const settingsController = new SettingsController()
 
 // repos methods
 export const addRepoToDB = async (repo) => {
@@ -69,5 +71,26 @@ export const updateReleaseInDB = async (payload) => {
     await releaseController.update(payload.id, payload)
   } catch (error) {
     console.log('dbMethods / updateReleaseInDB', error)
+  }
+}
+
+// settings
+
+export const getSettingsFromDB = async () => {
+  try {
+    return await settingsController.getOne(1)
+  } catch (error) {
+    console.log('dbMethods / getSettingsFromDB', error)
+  }
+}
+
+export const updateSettingsInDB = async (payload) => {
+  try {
+    await settingsController.update(payload.index, {
+      uuid: uuid(),
+      ...payload
+    })
+  } catch (error) {
+    console.log('dbMethods / updateSettingsInDB', error)
   }
 }

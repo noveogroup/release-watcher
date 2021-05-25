@@ -5,9 +5,11 @@
     <el-badge
       v-for="repo in repos"
       :key="repo.id"
-      :value="200"
+      :value="repo.newReleasesCount"
       :max="99"
-      class="repo__row --unread"
+      :hidden="repo.newReleasesCount === 0"
+      :class="{'--unread': repo.newReleasesCount > 0}"
+      class="repo__row"
     >
       <div class="repo__name">
         <span>

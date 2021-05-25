@@ -10,7 +10,9 @@ const {
   SET_RELEASES,
   SET_RELEASE,
   REMOVE_RELEASES,
-  UPDATE_RELEASE
+  UPDATE_RELEASE,
+  SET_SETTINGS,
+  UPDATE_SETTING
 } = mutationsVars
 
 export default {
@@ -56,5 +58,14 @@ export default {
       ...updatedRelease
     }
     state.releases.splice(index, 1, newItem)
+  },
+
+  // settings
+  [SET_SETTINGS] (state, settings) {
+    state.settings = settings
+  },
+
+  [UPDATE_SETTING] (state, updateSettings) {
+    state.settings = updateSettings
   }
 }

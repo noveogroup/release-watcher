@@ -11,7 +11,9 @@ import {
   addReleaseToDB,
   removeReleaseFromDB,
   getReleaseFromDB,
-  updateReleaseInDB
+  updateReleaseInDB,
+  updateSettingsInDB,
+  getSettingsFromDB
 } from '../utils/dbMethods'
 
 import { baseApiUrl } from '../constants'
@@ -25,7 +27,9 @@ const {
   //
   SET_RELEASES,
   REMOVE_RELEASES,
-  UPDATE_RELEASE
+  UPDATE_RELEASE,
+  SET_SETTINGS,
+  UPDATE_SETTINGS
 } = mutationsVars
 
 export default {
@@ -52,7 +56,8 @@ export default {
         id,
         url,
         name,
-        language
+        language,
+        newReleasesCount: 0
       }
 
       const dbRes = await addRepoToDB(data)
@@ -70,10 +75,11 @@ export default {
 
   async deleteRepo ({ commit, dispatch }, repoId) {
     try {
-      await removeRepoFromDB(repoId)
-
-      commit(REMOVE_REPO, repoId)
-      await dispatch('deleteReleases', repoId)
+      const res = await removeRepoFromDB(repoId)
+      if (res) {
+        commit(REMOVE_REPO, repoId)
+        await dispatch('deleteReleases', repoId)
+      }
     } catch (e) {
       console.log('store actions / deleteRepo')
     }
@@ -103,7 +109,7 @@ export default {
           name,
           version: release.tag_name,
           body,
-          new: true
+          new: false
         }
       })
 
@@ -119,8 +125,8 @@ export default {
 
   async deleteReleases ({ commit }, repoId) {
     try {
-      await removeReleaseFromDB(repoId)
-      commit(REMOVE_RELEASES, repoId)
+      const res = await removeReleaseFromDB(repoId)
+      if (res) { commit(REMOVE_RELEASES, repoId) }
     } catch (error) {
       console.log('store actions / deleteReleases', error)
     }
@@ -128,10 +134,30 @@ export default {
 
   async updateRelease ({ commit }, updatedRelease) {
     try {
-      await updateReleaseInDB(updatedRelease)
-      commit(UPDATE_RELEASE, updatedRelease)
+      const res = await updateReleaseInDB(updatedRelease)
+      if (res) { commit(UPDATE_RELEASE, updatedRelease) }
     } catch (error) {
       console.log('store actions / updateRelease', error)
+    }
+  },
+
+  // settings
+
+  async setSettings ({ commit }) {
+    try {
+      const res = await getSettingsFromDB()
+      if (res) { commit(SET_SETTINGS, res) }
+    } catch (error) {
+      console.log('store actions / setSettings', error)
+    }
+  },
+
+  async updateSettings ({ commit }, updateSettings) {
+    try {
+      const res = await updateSettingsInDB(updateSettings)
+      if (res) { commit(UPDATE_SETTINGS, updateSettings) }
+    } catch (error) {
+      console.log('store actions / updateSettings', error)
     }
   }
 

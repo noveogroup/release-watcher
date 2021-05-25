@@ -9,10 +9,10 @@ export default {
   name: 'App',
 
   async created () {
-    await this.$store.dispatch('setCurrentURL', await getUrlFromExt())
-
     try {
+      await this.$store.dispatch('setCurrentURL', await getUrlFromExt())
       await this.$store.dispatch('setRepos')
+      await this.$store.dispatch('setSettings')
     } catch (error) {
       console.error(error)
     }
