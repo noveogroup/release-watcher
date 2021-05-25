@@ -4,6 +4,8 @@ import { RELEASE_CHECK_ALARM_NAME } from '@/constants'
 import SettingsController from '@/controllers/SettingsController'
 
 chrome.runtime.onInstalled.addListener(async function () {
+  browser.browserAction.setBadgeBackgroundColor({ color: '#fcc' })
+
   chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
     if (changeInfo.status === 'complete') {
       chrome.tabs.sendMessage(tabId, {
