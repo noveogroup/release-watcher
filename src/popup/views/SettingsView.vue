@@ -18,19 +18,21 @@
           :step="5"
           show-stops
           class="interval__input"
-          @change="onSliderChange()"
+          @change="onChange()"
         />
       </div>
 
       <div>
+        {{ notification }}
         Notifications:
         <el-select
           v-model="notification"
           size="small"
           class="notifications"
+          @change="onChange()"
         >
           <el-option
-            v-for="(option, idx) in $options.selectOption"
+            v-for="(option, idx) in notOptions"
             :key="option.label + idx"
             :label="option.label"
             :value="option.value"
@@ -48,18 +50,30 @@ import { mapState } from 'vuex'
 export default {
   name: 'SettingsView',
 
-  selectOption: [
+  notData: [ // notification Data
     {
       label: 'No notifications',
-      value: 0
+      value: 0,
+      schema: {
+        notificationSound: false,
+        notifications: false
+      }
     },
     {
       label: 'Silent',
-      value: 1
+      value: 1,
+      schema: {
+        notificationSound: false,
+        notifications: true
+      }
     },
     {
       label: 'On',
-      value: 2
+      value: 2,
+      schema: {
+        notificationSound: true,
+        notifications: true
+      }
     }
   ],
 
@@ -70,18 +84,38 @@ export default {
 
   mounted () {
     this.intervals = this.settings.requestInterval
+
+    const { notificationSound, notifications } = this.settings
+
+    const item = this.$options.notData.find(e => {
+      if (e.schema.notificationSound === notificationSound && e.schema.notifications === notifications) {
+        return e
+      }
+    })
+
+    console.log('BLYA', item)
+
+    this.notification = item.value
   },
 
   computed: {
     ...mapState([
       'settings'
-    ])
+    ]),
+
+    notOptions () {
+      return this.$options.notData.map(e => ({
+        label: e.label,
+        value: e.value
+      }))
+    }
   },
 
   methods: {
-    onSliderChange () {
+    onChange () {
       this.$store.dispatch('updateSettings', {
         ...this.settings,
+        ...this.$options.notData.find(e => e.value === this.notification).schema,
         requestInterval: this.intervals
       })
     }
