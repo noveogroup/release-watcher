@@ -5,14 +5,30 @@
 <script>
 import { getUrlFromExt } from '../utils/urlWorkers'
 
+import store from '@/store'
+import { repositories } from '@/store/modules/repositories/repositories.js'
+import { currentURL } from '@/store/modules/currentURL/currentURL.js'
+import { releases } from '@/store/modules/releases/releases.js'
+
+if (!store.state.repositories) {
+  store.registerModule('repositories', repositories)
+}
+
+if (!store.state.currentURL) {
+  store.registerModule('currentURL', currentURL)
+}
+
+if (!store.state.releases) {
+  store.registerModule('releases', releases)
+}
+
 export default {
   name: 'App',
 
   async created () {
     try {
-      await this.$store.dispatch('setCurrentURL', await getUrlFromExt())
-      await this.$store.dispatch('setRepos')
-      await this.$store.dispatch('setSettings')
+      await this.$store.dispatch('currentURL/setCurrentURL', await getUrlFromExt())
+      await this.$store.dispatch('repositories/setRepos')
     } catch (error) {
       console.error(error)
     }

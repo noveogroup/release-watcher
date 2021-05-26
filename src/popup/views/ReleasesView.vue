@@ -25,10 +25,17 @@
 </template>
 
 <script>
+import store from '@/store'
+import { mapState } from 'vuex'
+
 import TheRepoToggle from '../components/repo/TheRepoToggle'
 import TheReleasesList from '../components/releases/TheReleasesList'
 
-import { mapState } from 'vuex'
+import { releases } from '@/store/modules/releases/releases.js'
+
+if (!store.state.releases) {
+  store.registerModule('releases', releases)
+}
 
 export default {
   name: 'RepoView',
@@ -47,7 +54,7 @@ export default {
     ]),
 
     currentRepoReleases () {
-      return this.$store.getters.getCurrentRepoReleases[this.repoId]
+      return this.$store.getters['releases/getCurrentRepoReleases'][this.repoId]
     },
 
     repoId () {
@@ -56,7 +63,7 @@ export default {
   },
 
   async created () {
-    await this.$store.dispatch('setReleases', this.$route.params.id.toString())
+    await this.$store.dispatch('releases/setReleases', this.$route.params.id.toString())
   },
 
   methods: {

@@ -111,11 +111,11 @@ export default {
   methods: {
 
     async onRemoveRepo (id) {
-      await this.$store.dispatch('deleteRepo', id)
+      await this.$store.dispatch('repositories/deleteRepo', id)
     },
 
     async onUrlAdded (id) {
-      await this.$store.dispatch('setRepo', id)
+      await this.$store.dispatch('repositories/setRepo', id)
     },
 
     onPageChange (event) {

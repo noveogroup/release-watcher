@@ -44,7 +44,14 @@
 </template>
 
 <script>
+import store from '@/store'
 import { mapState } from 'vuex'
+
+import { settings } from '@/store/modules/settings/settings.js'
+
+if (!store.state.settings) {
+  store.registerModule('settings', settings)
+}
 
 export default {
   name: 'SettingsView',
@@ -81,6 +88,14 @@ export default {
     notification: 0
   }),
 
+  async created () {
+    try {
+      await this.$store.dispatch('settings/setSettings')
+    } catch (error) {
+      console.error(error)
+    }
+  },
+
   mounted () {
     this.intervals = this.settings.requestInterval
 
@@ -109,7 +124,7 @@ export default {
 
   methods: {
     onChange () {
-      this.$store.dispatch('updateSettings', {
+      this.$store.dispatch('settings/updateSettings', {
         ...this.settings,
         ...this.$options.notData.find(e => e.value === this.notification).schema,
         requestInterval: this.intervals
