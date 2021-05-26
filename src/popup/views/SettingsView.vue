@@ -23,7 +23,6 @@
       </div>
 
       <div>
-        {{ notification }}
         Notifications:
         <el-select
           v-model="notification"
@@ -92,9 +91,6 @@ export default {
         return e
       }
     })
-
-    console.log('BLYA', item)
-
     this.notification = item.value
   },
 
