@@ -10,17 +10,17 @@ import { repositories } from '@/store/modules/repositories/repositories.js'
 import { currentURL } from '@/store/modules/currentURL/currentURL.js'
 import { releases } from '@/store/modules/releases/releases.js'
 
-if (!store.state.repositories) {
-  store.registerModule('repositories', repositories)
+const modules = {
+  repositories,
+  currentURL,
+  releases
 }
 
-if (!store.state.currentURL) {
-  store.registerModule('currentURL', currentURL)
-}
-
-if (!store.state.releases) {
-  store.registerModule('releases', releases)
-}
+Object.keys(modules).forEach(moduleName => {
+  if (!store.state[moduleName]) {
+    store.registerModule(moduleName, modules[moduleName])
+  }
+})
 
 export default {
   name: 'App',

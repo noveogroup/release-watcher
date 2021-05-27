@@ -3,7 +3,7 @@ import { mutationsVars } from '@/store/mutation-types.js'
 import {
   updateSettingsInDB,
   getSettingsFromDB
-} from '@/utils/dbMethods'
+} from '@/utils/DBMethods/settings'
 
 const {
   SET_SETTINGS,
@@ -21,7 +21,7 @@ const actions = {
       const res = await getSettingsFromDB()
       if (res) { commit(SET_SETTINGS, res) }
     } catch (error) {
-      console.log('store actions / setSettings', error)
+      console.log('store / settings / setSettings', error)
     }
   },
 
@@ -30,7 +30,7 @@ const actions = {
       const res = await updateSettingsInDB(updateSettings)
       if (res) { commit(UPDATE_SETTINGS, updateSettings) }
     } catch (error) {
-      console.log('store actions / updateSettings', error)
+      console.log('store / settings / updateSettings', error)
     }
   }
 }

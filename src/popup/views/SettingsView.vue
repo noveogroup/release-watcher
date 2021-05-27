@@ -1,5 +1,8 @@
 <template>
-  <div class="SettingsView">
+  <div
+    v-if='settings'
+    class="SettingsView"
+  >
     <el-button
       icon="el-icon-back"
       @click="$router.replace('/')"
@@ -91,28 +94,27 @@ export default {
   async created () {
     try {
       await this.$store.dispatch('settings/setSettings')
+
+      this.intervals = this.settings.requestInterval
+
+      const { notificationSound, notifications } = this.settings
+
+      const item = this.$options.notData.find(e => {
+        if (e.schema.notificationSound === notificationSound && e.schema.notifications === notifications) {
+          return e
+        }
+      })
+
+      this.notification = item.value
     } catch (error) {
       console.error(error)
     }
   },
 
-  mounted () {
-    this.intervals = this.settings.requestInterval
-
-    const { notificationSound, notifications } = this.settings
-
-    const item = this.$options.notData.find(e => {
-      if (e.schema.notificationSound === notificationSound && e.schema.notifications === notifications) {
-        return e
-      }
-    })
-    this.notification = item.value
-  },
-
   computed: {
-    ...mapState([
-      'settings'
-    ]),
+    ...mapState({
+      settings: state => state.settings.settings
+    }),
 
     notOptions () {
       return this.$options.notData.map(e => ({

@@ -38,7 +38,7 @@ const actions = {
     try {
       commit(SET_RELEASES, await getReleaseFromDB(repoId))
     } catch (e) {
-      console.log('store actions / setReleases', e)
+      console.log('store / releases / setReleases', e)
     }
   },
 
@@ -67,7 +67,7 @@ const actions = {
 
       formatted.forEach(add)
     } catch (e) {
-      console.log('store actions / setRelease', e)
+      console.log('store / releases / setRelease', e)
     }
   },
 
@@ -76,7 +76,7 @@ const actions = {
       const res = await removeReleaseFromDB(repoId)
       if (res) { commit(REMOVE_RELEASES, repoId) }
     } catch (error) {
-      console.log('store actions / deleteReleases', error)
+      console.log('store / releases / deleteReleases', error)
     }
   },
 
@@ -85,14 +85,14 @@ const actions = {
       const res = await updateReleaseInDB(updatedRelease)
       if (res) { commit(UPDATE_RELEASE, updatedRelease) }
     } catch (error) {
-      console.log('store actions / updateRelease', error)
+      console.log('store / releases / updateRelease', error)
     }
   }
 }
 
 const mutations = {
   [SET_RELEASES] (state, payload) {
-    state.releases = state.releases ? [...state.releases, ...payload] : [...payload]
+    state.releases = [...payload]
   },
 
   [SET_RELEASE] (state, payload) {

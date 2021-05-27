@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="releases">
 
     <el-button
       icon="el-icon-back"
@@ -25,17 +25,10 @@
 </template>
 
 <script>
-import store from '@/store'
 import { mapState } from 'vuex'
 
 import TheRepoToggle from '../components/repo/TheRepoToggle'
 import TheReleasesList from '../components/releases/TheReleasesList'
-
-import { releases } from '@/store/modules/releases/releases.js'
-
-if (!store.state.releases) {
-  store.registerModule('releases', releases)
-}
 
 export default {
   name: 'RepoView',
@@ -49,21 +42,21 @@ export default {
   }),
 
   computed: {
-    ...mapState([
-      'releases'
-    ]),
+    ...mapState({
+      releases: state => state.releases.releases
+    }),
 
     currentRepoReleases () {
       return this.$store.getters['releases/getCurrentRepoReleases'][this.repoId]
     },
 
     repoId () {
-      return this.$route.params.id.toString()
+      return +this.$route.params.id
     }
   },
 
   async created () {
-    await this.$store.dispatch('releases/setReleases', this.$route.params.id.toString())
+    await this.$store.dispatch('releases/setReleases', +this.$route.params.id)
   },
 
   methods: {

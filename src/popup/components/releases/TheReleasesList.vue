@@ -27,8 +27,8 @@ export default {
       default: true
     },
     repoId: {
-      type: String,
-      default: ''
+      type: Number,
+      require: true
     },
     releases: {
       type: Array,
@@ -57,7 +57,7 @@ export default {
         ...showedRelease,
         new: false
       }
-      this.$store.dispatch('updateRelease', newItem)
+      this.$store.dispatch('releases/updateRelease', newItem)
     },
 
     getReleaseById (id) {

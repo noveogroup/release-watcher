@@ -102,7 +102,7 @@ export default class BaseController {
 
   /**
    * Updating a record in a database table
-   * @param {String} primaryKeyValue - The primary key value
+   * @param {Number} primaryKeyValue - The primary key value
    * @param {Object} payload - The payload to update to the database
    * @returns {Promise<Model|Error>} - Updated record in the database or error
    */
@@ -138,7 +138,7 @@ export default class BaseController {
 
   /**
    * Deleting a record in a database table
-   * @param {String} primaryKeyValue - The primary key value
+   * @param {Number} primaryKeyValue - The primary key value
    * @returns {Promise<Model|Error>} - Deleted record in the database or error
    */
   async delete (primaryKeyValue) {

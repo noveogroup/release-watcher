@@ -29,7 +29,7 @@ const actions = {
     try {
       commit(SET_REPOS, await getAllReposFromDB())
     } catch (e) {
-      console.log('store actions / setRepos', e)
+      console.log('store / repositories / setRepos', e)
     }
   },
 
@@ -53,7 +53,7 @@ const actions = {
 
       commit(SET_REPO, dbRes)
     } catch (e) {
-      console.log('store actions / setRepo', e)
+      console.log('store / repositories / setRepo', e)
     }
   },
 
@@ -62,10 +62,10 @@ const actions = {
       const res = await removeRepoFromDB(repoId)
       if (res) {
         commit(REMOVE_REPO, repoId)
-        await dispatch('deleteReleases', repoId, { root: true })
+        await dispatch('releases/deleteReleases', repoId, { root: true })
       }
     } catch (e) {
-      console.log('store actions / deleteRepo')
+      console.log('store / repositories / deleteRepo')
     }
   }
 }

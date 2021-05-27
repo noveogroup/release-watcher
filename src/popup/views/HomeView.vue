@@ -71,10 +71,10 @@ export default {
   },
 
   computed: {
-    ...mapState([
-      'currentURL',
-      'repos'
-    ]),
+    ...mapState({
+      currentURL: state => state.currentURL.currentURL,
+      repos: state => state.repositories.repos
+    }),
 
     currentPageItems () {
       const startIdx = this.pagination.page * this.pagination.pageSize
