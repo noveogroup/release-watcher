@@ -4,7 +4,7 @@ import { REGEX_UUID } from '../db/constants'
 const baseColumns = {
   uuid: {
     type: String,
-    required: true,
+    required: false,
     match: REGEX_UUID,
     length: 36
   },
