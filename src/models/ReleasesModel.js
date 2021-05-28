@@ -1,7 +1,7 @@
 import BaseModel from './BaseModel'
 import { RELEASES_TABLE_NAME, PRIMARY_KEY } from '../db/constants'
 
-export default class ReleaseModel extends BaseModel {
+export default class ReleasesModel extends BaseModel {
   constructor () {
     super(RELEASES_TABLE_NAME, {
       id: {
@@ -18,17 +18,13 @@ export default class ReleaseModel extends BaseModel {
       },
       name: {
         type: String,
-        required: true
+        required: false
       },
       new: {
         type: Boolean,
         required: true
       },
       version: {
-        type: String,
-        required: true
-      },
-      author: {
         type: String,
         required: true
       },

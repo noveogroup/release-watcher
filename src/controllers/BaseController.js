@@ -75,7 +75,7 @@ export default class BaseController {
 
       const total = await tables[tableName].count()
 
-      const baseFiels = {
+      const baseFields = {
         uuid: uuidv4(),
         index: total + 1,
         created_at: new Date(),
@@ -85,7 +85,7 @@ export default class BaseController {
       }
 
       const data = {
-        ...baseFiels,
+        ...baseFields,
         ...(isObject(payload) ? payload : {})
       }
 
@@ -102,7 +102,7 @@ export default class BaseController {
 
   /**
    * Updating a record in a database table
-   * @param {String} primaryKeyValue - The primary key value
+   * @param {Number} primaryKeyValue - The primary key value
    * @param {Object} payload - The payload to update to the database
    * @returns {Promise<Model|Error>} - Updated record in the database or error
    */
@@ -125,9 +125,10 @@ export default class BaseController {
       }
 
       const errors = model.validate(data)
+
       if (errors.length) throw new Error(errors)
 
-      const result = await tables[tableName].save(primaryKeyValue, data)
+      const result = await tables[tableName].save(primaryKeyValue, data, true)
 
       return Promise.resolve(result)
     } catch (error) {
@@ -137,7 +138,7 @@ export default class BaseController {
 
   /**
    * Deleting a record in a database table
-   * @param {String} primaryKeyValue - The primary key value
+   * @param {Number} primaryKeyValue - The primary key value
    * @returns {Promise<Model|Error>} - Deleted record in the database or error
    */
   async delete (primaryKeyValue) {

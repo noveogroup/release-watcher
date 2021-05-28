@@ -4,13 +4,13 @@ import { REGEX_UUID } from '../db/constants'
 const baseColumns = {
   uuid: {
     type: String,
-    required: true,
+    required: false,
     match: REGEX_UUID,
     length: 36
   },
   index: {
     type: Number,
-    required: true
+    required: false
   },
   created_at: {
     type: Date,
