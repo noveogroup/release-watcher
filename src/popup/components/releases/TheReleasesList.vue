@@ -52,12 +52,16 @@ export default {
 
   methods: {
     onCollapseChange (val) {
+      if (!val.length) { return }
       const showedRelease = this.getReleaseById(val[val.length - 1])
       const newItem = {
         ...showedRelease,
         new: false
       }
-      this.$store.dispatch('releases/updateRelease', newItem)
+
+      if (showedRelease.new === true) {
+        this.$store.dispatch('releases/updateRelease', newItem)
+      }
     },
 
     getReleaseById (id) {

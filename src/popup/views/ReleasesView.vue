@@ -38,7 +38,9 @@ export default {
   },
 
   data: () => ({
-    toggle: false
+    toggle: false,
+
+    expandedBefore: false
   }),
 
   computed: {
@@ -62,6 +64,21 @@ export default {
   methods: {
     onToggle (val) {
       this.toggle = val
+      this.updateAllReleases()
+    },
+
+    updateAllReleases () {
+      if (this.expandedBefore) { return }
+      this.currentRepoReleases.forEach(release => {
+        if (release.new === true) {
+          const newItem = {
+            ...release,
+            new: false
+          }
+          this.$store.dispatch('releases/updateRelease', newItem)
+        }
+      })
+      this.expandedBefore = true
     }
   }
 }
