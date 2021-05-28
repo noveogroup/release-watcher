@@ -1,7 +1,5 @@
 import ReleaseController from '@/controllers/ReleaseController'
 
-import { v4 as uuid } from 'uuid'
-
 const releaseController = new ReleaseController()
 
 /**
@@ -11,10 +9,7 @@ const releaseController = new ReleaseController()
  */
 export const addReleaseToDB = async (release) => {
   try {
-    return await releaseController.create({
-      uuid: uuid(),
-      ...release
-    })
+    return await releaseController.create(release)
   } catch (error) {
     console.log('DBMethods / releases / addReleaseToDB', error)
   }

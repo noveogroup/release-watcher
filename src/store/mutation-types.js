@@ -8,7 +8,7 @@ const mutationNames = [
   'REMOVE_RELEASES',
   'UPDATE_RELEASE',
   'SET_SETTINGS',
-  'UPDATE_SETTING'
+  'UPDATE_SETTINGS'
 ]
 
 export const mutationsVars = mutationNames.reduce((acc, curr) => {
