@@ -4,6 +4,8 @@ import store from '@/store'
 import router from './router'
 import {
   Button,
+  ButtonGroup,
+  Link,
   Input,
   Switch,
   Select,
@@ -19,6 +21,8 @@ import {
 
 const components = {
   Button,
+  ButtonGroup,
+  Link,
   Input,
   Switch,
   Select,

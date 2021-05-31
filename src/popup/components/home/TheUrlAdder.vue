@@ -17,7 +17,8 @@
     <el-input
       class="input"
       placeholder="/owner/name"
-      v-model="urlInput"
+      :value="urlInput"
+      @input="setRepoUrl"
       clearable>
     </el-input>
 
@@ -36,18 +37,21 @@ export default {
   name: 'TheUrlAdder',
 
   data: () => ({
-    source: null,
+    source: 'https://github.com',
     urlInput: null,
 
     options: [
       {
-        value: 1,
+        value: 'https://github.com',
         label: 'GitHub'
       }
     ]
   }),
 
   methods: {
+    setRepoUrl (url) {
+      this.urlInput = url.replace(this.source, '')
+    },
     addUrl () {
       this.$emit('onUrlAdd', this.urlInput)
     }

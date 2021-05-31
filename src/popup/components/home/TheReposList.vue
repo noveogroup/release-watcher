@@ -11,16 +11,16 @@
       :class="{'--unread': repo.newReleasesCount > 0}"
       class="repo__row"
     >
-      <div class="repo__name">
-        <span>
-          {{ repo.name }}
-        </span>
-        <p>
-          {{ repo.url }}
-        </p>
-      </div>
+      <el-link
+        :href="repo.url"
+        :title="repo.name"
+        target="_blank"
+        class="repo__name"
+      >
+        {{ repo.name }}
+      </el-link>
 
-      <div class="repo__buttons">
+      <el-button-group>
         <el-button
           size="small"
           icon="el-icon-view"
@@ -32,7 +32,7 @@
           icon="el-icon-delete"
           @click="onDeleteClicking(repo.id)"
         />
-      </div>
+      </el-button-group>
 
     </el-badge>
 
@@ -91,8 +91,9 @@ export default {
 
   &__row {
     display: flex;
-    align-content: center;
-    padding: 12px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
     border-radius: 4px;
     border-bottom: 1px solid #ebeef5;
 
@@ -117,39 +118,7 @@ export default {
   }
 
   &__name {
-    display: flex;
-    flex-direction: column;
-
-    & > span {
-      font-size: 16px;
-    }
-
-    & > p {
-      all: unset;
-      margin-top: 4px;
-      opacity: 0.4;
-      font-size: 10px;
-    }
-  }
-
-  &__buttons {
-    padding-left: 10px;
-    margin-left: auto;
-
-    ::v-deep {
-      .el-button {
-        margin: 0;
-
-        &:first-child {
-          border-radius: 3px 0 0 3px;
-          border-right: none;
-        }
-
-        &:last-child {
-          border-radius: 0 3px 3px 0;
-        }
-      }
-    }
+    max-width: 200px;
   }
 }
 </style>
