@@ -1,7 +1,7 @@
 <template>
   <div class="TheHeader">
     <span>
-      Show all releases
+      Expand all
     </span>
     <el-switch
       :value="value"

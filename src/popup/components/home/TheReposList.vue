@@ -24,7 +24,7 @@
         <el-button
           size="small"
           icon="el-icon-view"
-          @click="onRepoSelect(repo.id)"
+          @click="onRepoSelect(repo)"
         />
 
         <el-button
@@ -66,8 +66,8 @@ export default {
 
   methods: {
 
-    onRepoSelect (id) {
-      this.$router.push(`/repo/${id}`)
+    onRepoSelect (repo) {
+      this.$router.push({ path: `/repo/${repo.id}`, query: { name: repo.name } })
     },
 
     onDeleteClicking (id) {

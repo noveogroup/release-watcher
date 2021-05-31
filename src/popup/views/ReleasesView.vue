@@ -7,7 +7,7 @@
     />
 
     <h1>
-      Releases
+      {{ $route.query.name }} latest releases
     </h1>
 
     <TheRepoToggle
