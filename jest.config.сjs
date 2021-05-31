@@ -1,0 +1,16 @@
+module.exports = {
+  preset: '@vue/cli-plugin-unit-jest',
+  setupFilesAfterEnv: ['./jest.setup.js'],
+  testEnvironment: 'jsdom',
+  testEnvironmentOptions: {
+    resources: 'usable'
+  },
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1',
+    '\\.scss$': 'identity-obj-proxy'
+  },
+  collectCoverageFrom: [
+    'src/**/*.{js,vue}'
+  ],
+  
+}
