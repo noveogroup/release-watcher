@@ -1,27 +1,5 @@
 import { baseApiUrl } from '@/constants'
-
-const url = baseApiUrl + window.location.pathname + '/releases'
-const name = window.location.pathname.split('/')[2]
-const id = parseInt(
-  document
-    .querySelector("meta[name='octolytics-dimension-repository_id']")
-    ?.getAttribute('content')
-)
-
-const getMostPopularLanguage = () => {
-  try {
-    const hTwoTags = document.getElementsByTagName('h2')
-    const languageHeader = Array.from(hTwoTags).find(header => {
-      return header.innerText === 'Languages'
-    })
-    return languageHeader.parentNode
-      .getElementsByTagName('a')[0]
-      .getElementsByTagName('span')[0].innerText
-  } catch (error) {
-    console.log('no language found on the page', error)
-    return 'no language found'
-  }
-}
+import { pathName, id, name, getMostPopularLanguage } from './pageElements'
 
 export const isWatching = async () => {
   return new Promise(resolve => {
@@ -40,7 +18,7 @@ export const updateRepo = isAdding => {
       requestType: 'updateRepo',
       isAdding,
       id,
-      url,
+      url: baseApiUrl + pathName + +'/releases',
       name,
       language: getMostPopularLanguage(),
       newReleasesCount: 0
