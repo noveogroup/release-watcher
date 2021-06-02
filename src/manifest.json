@@ -7,8 +7,7 @@
   "permissions": [
     "tabs",
     "activeTab",
-    "<all_urls>",
-    "*://*/*",
+    "https://api.github.com/*",
     "alarms",
     "notifications"
   ],
