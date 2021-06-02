@@ -56,24 +56,24 @@ export default {
         label: 'No notifications',
         value: 0,
         schema: {
-          notificationSound: false,
-          notifications: false
+          notificationSound: 0,
+          notifications: 0
         }
       },
       {
         label: 'Silent',
         value: 1,
         schema: {
-          notificationSound: false,
-          notifications: true
+          notificationSound: 0,
+          notifications: 1
         }
       },
       {
         label: 'On',
         value: 2,
         schema: {
-          notificationSound: true,
-          notifications: true
+          notificationSound: 1,
+          notifications: 1
         }
       }
     ]
@@ -90,8 +90,8 @@ export default {
       const settings = await this.getSettings()
 
       const {
-        notificationSound = false,
-        notifications = false,
+        notificationSound = 0,
+        notifications = 0,
         requestInterval = 15
       } = settings || {}
       const notification = this.notifications.findIndex(notify => {

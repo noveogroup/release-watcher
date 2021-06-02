@@ -20,7 +20,7 @@ export default {
 
       return Promise.resolve(releases)
     } catch (error) {
-      console.log('store / releases / getReleases', error)
+      console.error('store / releases / getReleases', error)
     }
   },
   async getReleasesTotal ({ commit }, filters = {}) {
@@ -30,7 +30,7 @@ export default {
 
       return Promise.resolve(total)
     } catch (error) {
-      console.log('store / releases / getReleases', error)
+      console.error('store / releases / getReleases', error)
     }
   },
   async setRelease ({ commit }, { repoId, addingUrl } = {}) {
@@ -39,7 +39,7 @@ export default {
 
       const formattedReleases = releases.map(
         ({ id, name, body, html_url: url, tag_name: version }) => {
-          return { repoId, id, url, name, version, body, new: false }
+          return { repoId, id, url, name, version, body, new: 0 }
         })
 
       formattedReleases.forEach(async (release) => {
@@ -49,7 +49,7 @@ export default {
 
       return Promise.resolve(formattedReleases)
     } catch (error) {
-      console.log('store / releases / setRelease', error)
+      console.error('store / releases / setRelease', error)
     }
   },
   async deleteReleases ({ commit }, repoId) {
@@ -59,7 +59,7 @@ export default {
 
       return Promise.resolve(release)
     } catch (error) {
-      console.log('store / releases / deleteReleases', error)
+      console.error('store / releases / deleteReleases', error)
     }
   },
   async updateRelease ({ commit }, updatedRelease) {
@@ -69,7 +69,7 @@ export default {
 
       return Promise.resolve(release)
     } catch (error) {
-      console.log('store / releases / updateRelease', error)
+      console.error('store / releases / updateRelease', error)
     }
   }
 }

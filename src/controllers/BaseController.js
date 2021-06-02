@@ -1,25 +1,23 @@
 import { v4 as uuidv4 } from 'uuid'
 import { isObject } from '@/utils/typeChecker'
-import db from '../db'
-
-const _sortBy = require('lodash.sortby')
+import __db from '../db'
 
 /** BaseController */
 export default class BaseController {
   /**
    * @param {String} tableName - The table name
-   * @param {Object} model - The model object
+   * @param {Object} schema - The schema object
    * @param {Boolean} softDelete - The soft delete, default false, if true then cannot delete a row from the table.
    */
-  constructor (tableName, model, softDelete = false) {
-    if (!tableName || !model) {
-      throw new Error('BaseController - tableName and model is required')
+  constructor (tableName, schema, softDelete = false) {
+    if (!tableName || !schema) {
+      throw new Error('BaseController - tableName and schema is required')
     }
 
     this.tableName = tableName
-    this.model = model
+    this.schema = schema
     this.softDelete = softDelete
-    this.db = db
+    this.db = __db
   }
 
   /**
@@ -30,8 +28,7 @@ export default class BaseController {
   async getOne (primaryKeyValue) {
     try {
       const { db, tableName } = this
-      const tables = await db.connect()
-      const result = await tables[tableName].find(primaryKeyValue)
+      const result = await db[tableName].get(primaryKeyValue)
 
       return Promise.resolve(result)
     } catch (error) {
@@ -47,14 +44,9 @@ export default class BaseController {
   async getCount (filters = {}) {
     try {
       const { db, tableName } = this
-      const tables = await db.connect()
-
-      const filteredTable = Object.entries(filters)
-        .reduce((table, [key, value]) => {
-          return table.where(key, value)
-        }, tables[tableName])
-        .where('deleted', false)
-      const count = await filteredTable.count()
+      const count = await db[tableName]
+        .where({ ...filters, deleted: 0 })
+        .count()
 
       return Promise.resolve(count)
     } catch (error) {
@@ -65,41 +57,27 @@ export default class BaseController {
   /**
    * Retrieving all records of a database table with pagination
    * @param {Number} page - The current page, default 1.
-   * @param {Number} perPage - The per page, default 25.
-   * @param {('DESC'|'ASC')} sortOrder - The Sorting order
-   * @param {String[]} sortBy - The array of sorting params
+   * @param {Number} perPage - The per page, default 5.
    * @param {Object} filters = Filters for request
    * @returns {Promise<Model[]|Error>} - Get all record in the database or error
    */
   async getAll ({
     page = 1,
-    perPage = 5,
-    sortOrder = 'DESC',
-    sortBy = [],
+    perPage: limit = 5,
     filters = {}
   } = {}) {
     try {
       const { db, tableName } = this
-      const tables = await db.connect()
 
-      const filteredTable = Object.entries(filters)
-        .reduce((table, [key, value]) => {
-          return table.where(key, value)
-        }, tables[tableName])
-        .where('deleted', false)
+      const offset = (page * limit) - limit
+      const result = await db[tableName]
+        .where({ ...filters, deleted: 0 })
+        .reverse()
+        .offset(offset)
+        .limit(limit)
+        .toArray()
 
-      const total = await filteredTable.count()
-
-      const end = (page * perPage) > total ? total : (page * perPage)
-      const start = end - perPage
-
-      const result = await filteredTable.all()
-
-      const sortedResult = _sortBy(result, [...new Set(['created_at', 'updated_at', ...sortBy])])
-      const sortedResultByOrder = sortOrder === 'ASC' ? sortedResult.reverse() : sortedResult
-      const paginatedResult = sortedResultByOrder.slice(start, end)
-
-      return Promise.resolve(paginatedResult)
+      return Promise.resolve(result)
     } catch (error) {
       return Promise.reject(error)
     }
@@ -112,28 +90,23 @@ export default class BaseController {
    */
   async create (payload = {}) {
     try {
-      const { db, model, tableName } = this
-      const tables = await db.connect()
+      const { db, tableName, schema } = this
 
-      const baseFields = {
+      const data = {
+        ...(isObject(payload) ? payload : {}),
         uuid: uuidv4(),
         created_at: new Date().getTime(),
         updated_at: new Date().getTime(),
         deleted_at: new Date().getTime(),
-        deleted: false
+        deleted: 0
       }
 
-      const data = {
-        ...baseFields,
-        ...(isObject(payload) ? payload : {})
-      }
-
-      const errors = model.validate(data)
+      const errors = schema.validate(data)
       if (errors.length) throw new Error(errors)
 
-      const result = await tables[tableName].create(data)
+      await db[tableName].add(data)
 
-      return Promise.resolve(result)
+      return Promise.resolve(data)
     } catch (error) {
       return Promise.reject(error)
     }
@@ -147,29 +120,27 @@ export default class BaseController {
    */
   async update (primaryKeyValue, payload = {}) {
     try {
-      const { db, model, tableName, create } = this
-      const tables = await db.connect()
+      const { db, tableName, schema } = this
 
-      const currentFields = await tables[tableName].find(primaryKeyValue)
+      const currentFields = await this.getOne(primaryKeyValue)
 
       if (!isObject(currentFields)) {
-        const result = await create(payload)
+        const result = await this.create(payload)
         return Promise.resolve(result)
       }
 
       const data = {
         ...currentFields,
         ...(isObject(payload) ? payload : {}),
-        updated_at: new Date()
+        updated_at: new Date().getTime()
       }
 
-      const errors = model.validate(data)
-
+      const errors = schema.validate(data)
       if (errors.length) throw new Error(errors)
 
-      const result = await tables[tableName].save(primaryKeyValue, data, true)
+      await db[tableName].put(data, primaryKeyValue)
 
-      return Promise.resolve(result)
+      return Promise.resolve(data)
     } catch (error) {
       return Promise.reject(error)
     }
@@ -182,22 +153,23 @@ export default class BaseController {
    */
   async delete (primaryKeyValue) {
     try {
-      const { db, tableName, update, softDelete } = this
-      const tables = await db.connect()
+      const { db, tableName, softDelete } = this
+
+      const currentFields = await this.getOne(primaryKeyValue)
+      const deletableFields = (isObject(currentFields) ? currentFields : {})
 
       if (softDelete) {
-        const currentFields = tables[tableName].find(primaryKeyValue)
-        const result = await update(primaryKeyValue, {
-          ...(isObject(currentFields) ? currentFields : {}),
-          deleted_at: new Date(),
-          deleted: true
+        const result = await this.update(primaryKeyValue, {
+          ...deletableFields,
+          deleted_at: new Date().getTime(),
+          deleted: 1
         })
         return Promise.resolve(result)
       }
 
-      const result = await tables[tableName].delete(primaryKeyValue)
+      await db[tableName].delete(primaryKeyValue)
 
-      return Promise.resolve(result)
+      return Promise.resolve(deletableFields)
     } catch (error) {
       return Promise.reject(error)
     }
