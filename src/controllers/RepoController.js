@@ -1,18 +1,17 @@
 import BaseController from './BaseController'
 import { REPOS_TABLE_NAME } from '../db/constants'
-import RepoModel from '../models/RepoModel'
+import { __RepoModel } from '../db'
 
 export default class RepoController extends BaseController {
   constructor () {
-    super(REPOS_TABLE_NAME, new RepoModel())
+    super(REPOS_TABLE_NAME, __RepoModel.schema)
   }
 
   async getActiveRepos () {
     try {
-      const tables = await this.db.connect()
-      const res = await tables[REPOS_TABLE_NAME].where('disabled', false).all()
+      const repos = await this.getAll({ filters: { disabled: 0 } })
 
-      return Promise.resolve(res)
+      return Promise.resolve(repos)
     } catch (error) {
       return Promise.reject(error)
     }
@@ -20,14 +19,12 @@ export default class RepoController extends BaseController {
 
   async incrementNewReleasesCount (id, increment = 1) {
     try {
-      const tables = await this.db.connect()
-      const repo = await tables[REPOS_TABLE_NAME].find(id)
-      const res = tables[REPOS_TABLE_NAME].update({
-        ...repo,
+      const repo = await this.getOne(id)
+      const repos = await this.update(id, {
         newReleasesCount: repo.newReleasesCount + increment
       })
 
-      return Promise.resolve(res)
+      return Promise.resolve(repos)
     } catch (error) {
       console.log(error)
       return Promise.reject(error)

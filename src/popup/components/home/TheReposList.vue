@@ -1,7 +1,5 @@
 <template>
-  <div v-if="repos"
-       class="repo__list"
-  >
+  <div class="repo__list">
     <el-badge
       v-for="repo in repos"
       :key="repo.id"
@@ -24,22 +22,27 @@
         <el-button
           size="small"
           icon="el-icon-view"
-          @click="onRepoSelect(repo)"
+          @click="onViewRepo(repo)"
         />
 
-        <el-button
-          size="small"
-          icon="el-icon-delete"
-          @click="onDeleteClicking(repo.id)"
-        />
+        <el-popconfirm
+          confirmButtonText="Delete"
+          cancelButtonText="Cancel"
+          icon="el-icon-info"
+          iconColor="red"
+          :title="`Are you sure to delete «${repo.name}»?`"
+          @confirm="onDeleteRepo(repo.id)"
+        >
+          <template #reference>
+            <el-button
+              size="small"
+              icon="el-icon-delete"
+            />
+          </template>
+        </el-popconfirm>
       </el-button-group>
 
     </el-badge>
-
-    <VConfirmPopup
-      v-show="showConfirm"
-      @onChange="onConfirmChange($event)"
-    />
   </div>
 </template>
 
@@ -47,15 +50,6 @@
 
 export default {
   name: 'TheReposList',
-  components: {
-    VConfirmPopup: () => import('../sharable/VConfirmPopup')
-  },
-
-  data: () => ({
-    showConfirm: false,
-
-    deletingCandidate: null
-  }),
 
   props: {
     repos: {
@@ -65,22 +59,12 @@ export default {
   },
 
   methods: {
-
-    onRepoSelect (repo) {
+    onViewRepo (repo) {
       this.$router.push({ path: `/repo/${repo.id}`, query: { name: repo.name } })
     },
 
-    onDeleteClicking (id) {
-      this.deletingCandidate = id
-      this.showConfirm = !this.showConfirm
-    },
-
-    onConfirmChange (status) {
-      if (status === 'confirm') {
-        this.$emit('onRemoveRepo', this.deletingCandidate)
-      }
-      this.deletingCandidate = null
-      this.showConfirm = false
+    onDeleteRepo (id) {
+      this.$emit('onRemoveRepo', id)
     }
   }
 }
@@ -93,9 +77,9 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 12px 0;
+    padding: 12px;
     border-radius: 4px;
-    border-bottom: 1px solid #ebeef5;
+    border: 1px solid #ebeef5;
 
     &.--unread {
       background-color: rgba(245, 108, 108, 0.1);
@@ -104,9 +88,8 @@ export default {
     &:first-child {
       border-top: 1px solid #ebeef5;
     }
-
     &:not(:last-child) {
-      margin-bottom: 8px;
+      margin-bottom: 12px;
     }
 
     ::v-deep {

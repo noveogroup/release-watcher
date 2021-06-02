@@ -3,35 +3,24 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 import { getUrlFromExt } from '../utils/urlWorkers'
-
-import store from '@/store'
-import { repositories } from '@/store/modules/repositories/repositories.js'
-import { currentURL } from '@/store/modules/currentURL/currentURL.js'
-import { releases } from '@/store/modules/releases/releases.js'
-
-const modules = {
-  repositories,
-  currentURL,
-  releases
-}
-
-Object.keys(modules).forEach(moduleName => {
-  if (!store.state[moduleName]) {
-    store.registerModule(moduleName, modules[moduleName])
-  }
-})
+import { SET_CURRENT_URL } from '@/store/modules/currentURL/mutation-types'
 
 export default {
   name: 'App',
-
   async created () {
     try {
-      await this.$store.dispatch('currentURL/setCurrentURL', await getUrlFromExt())
-      await this.$store.dispatch('repositories/setRepos')
+      const currentURL = await getUrlFromExt()
+      this[SET_CURRENT_URL](currentURL)
     } catch (error) {
       console.error(error)
     }
+  },
+  methods: {
+    ...mapMutations('currentURL', [
+      SET_CURRENT_URL
+    ])
   }
 }
 </script>
@@ -43,6 +32,10 @@ html {
 
   * {
     box-sizing: border-box;
+  }
+
+  p {
+    margin-top: 0;
   }
 
   body {

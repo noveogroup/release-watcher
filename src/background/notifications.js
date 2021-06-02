@@ -1,18 +1,17 @@
-import SettingsController from '@/controllers/SettingsController'
+import { __SettingsController } from '@/store/modules/settings/actions'
 import badge from './badge'
 
 export async function showNotification (repoName) {
   badge.set()
 
-  const settingsController = new SettingsController()
-  const currSettings = await settingsController.getOne(1)
-  if (!currSettings.notifications) return
+  const settings = await __SettingsController.getSettings()
+  if (!settings.notifications) return
 
   browser.notifications.create('', {
     title: `New version for ${repoName} was just released!`,
     message: 'Check it out in Release Watcher',
     iconUrl: '/icons/128.png',
     type: 'basic',
-    silent: currSettings.notificationSound || false
+    silent: settings.notificationSound || false
   })
 }

@@ -5,27 +5,29 @@ import {
   defaultNotificationSetting,
   defaultNotificationSoundSetting
 } from '../constants'
-import SettingsModel from '../models/SettingsModel'
+import { __SettingsModel } from '../db'
 
 export default class SettingsController extends BaseController {
   constructor () {
-    super(SETTINGS_TABLE_NAME, new SettingsModel())
+    super(SETTINGS_TABLE_NAME, __SettingsModel.schema)
   }
 
-  async setDefaultIfEmpty () {
+  async getSettings () {
     try {
-      const { db, tableName } = this
-      const tables = await db.connect()
-      const count = await tables[tableName].count()
+      const count = await this.getCount()
 
-      if (count) return Promise.resolve('settings row already exists')
-
-      const result = tables[tableName].create({
-        requestInterval: defaultRequestInterval,
-        notifications: defaultNotificationSetting,
-        notificationSound: defaultNotificationSoundSetting
-      })
-      return Promise.resolve(result)
+      if (count > 0) {
+        const [settings] = await this.getAll()
+        return Promise.resolve(settings)
+      } else {
+        const settings = await this.create({
+          index: 1,
+          requestInterval: defaultRequestInterval,
+          notifications: defaultNotificationSetting,
+          notificationSound: defaultNotificationSoundSetting
+        })
+        return Promise.resolve(settings)
+      }
     } catch (error) {
       return Promise.reject(error)
     }

@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-if='settings'
-    class="SettingsView"
-  >
+  <div class="SettingsView">
     <el-button
       icon="el-icon-back"
       @click="$router.replace('/')"
@@ -34,102 +31,97 @@
           @change="onChange()"
         >
           <el-option
-            v-for="(option, idx) in notOptions"
-            :key="option.label + idx"
+            v-for="(option, i) in notifications"
+            :key="`option-${i}`"
             :label="option.label"
             :value="option.value"
           />
         </el-select>
       </div>
     </div>
-
   </div>
 </template>
 
 <script>
-import store from '@/store'
-import { mapState } from 'vuex'
-
-import { settings } from '@/store/modules/settings/settings.js'
-
-if (!store.state.settings) {
-  store.registerModule('settings', settings)
-}
+import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'SettingsView',
 
-  notData: [ // notification Data
-    {
-      label: 'No notifications',
-      value: 0,
-      schema: {
-        notificationSound: false,
-        notifications: false
-      }
-    },
-    {
-      label: 'Silent',
-      value: 1,
-      schema: {
-        notificationSound: false,
-        notifications: true
-      }
-    },
-    {
-      label: 'On',
-      value: 2,
-      schema: {
-        notificationSound: true,
-        notifications: true
-      }
-    }
-  ],
-
   data: () => ({
-    intervals: 0,
-    notification: 0
+    intervals: 15,
+    notification: 1,
+    notifications: [
+      {
+        label: 'No notifications',
+        value: 0,
+        schema: {
+          notificationSound: 0,
+          notifications: 0
+        }
+      },
+      {
+        label: 'Silent',
+        value: 1,
+        schema: {
+          notificationSound: 0,
+          notifications: 1
+        }
+      },
+      {
+        label: 'On',
+        value: 2,
+        schema: {
+          notificationSound: 1,
+          notifications: 1
+        }
+      }
+    ]
   }),
+
+  computed: {
+    ...mapState('settings', [
+      'settings'
+    ])
+  },
 
   async created () {
     try {
-      await this.$store.dispatch('settings/setSettings')
+      const settings = await this.getSettings()
 
-      this.intervals = this.settings.requestInterval
+      const {
+        notificationSound = 0,
+        notifications = 0,
+        requestInterval = 15
+      } = settings || {}
+      const notification = this.notifications.findIndex(notify => {
+        return (notify.schema.notificationSound === notificationSound) &&
+               (notify.schema.notifications === notifications)
+      }) ?? 0
 
-      const { notificationSound, notifications } = this.settings
-
-      const item = this.$options.notData.find(e => {
-        if (e.schema.notificationSound === notificationSound && e.schema.notifications === notifications) {
-          return e
-        }
-      })
-
-      this.notification = item.value
+      this.notification = notification
+      this.intervals = requestInterval
     } catch (error) {
       console.error(error)
     }
   },
 
-  computed: {
-    ...mapState({
-      settings: state => state.settings.settings
-    }),
-
-    notOptions () {
-      return this.$options.notData.map(e => ({
-        label: e.label,
-        value: e.value
-      }))
-    }
-  },
-
   methods: {
+    ...mapActions('settings', [
+      'getSettings',
+      'updateSettings'
+    ]),
     onChange () {
-      this.$store.dispatch('settings/updateSettings', {
-        ...this.settings,
-        ...this.$options.notData.find(e => e.value === this.notification).schema,
-        requestInterval: this.intervals
+      const currentSettings = this.settings || {}
+      const notifySettings = this.notifications
+        .find(notification => notification.value === this.notification)
+        ?.schema || {}
+      const requestInterval = this.intervals
+
+      this.updateSettings({
+        ...currentSettings,
+        ...notifySettings,
+        requestInterval
       })
     }
   }

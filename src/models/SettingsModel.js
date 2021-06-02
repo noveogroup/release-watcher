@@ -1,22 +1,34 @@
-import BaseModel from './BaseModel'
+import BaseModel, { AIPK } from './BaseModel'
 import { SETTINGS_TABLE_NAME, SETTINGS_PRIMARY_KEY } from '../db/constants'
-
 export default class SettingsModel extends BaseModel {
   constructor () {
     super(
       SETTINGS_TABLE_NAME,
       {
+        index: {
+          entry: AIPK,
+          schema: {
+            type: Number,
+            required: true
+          }
+        },
         requestInterval: {
-          type: Number,
-          required: true
+          schema: {
+            type: Number,
+            required: true
+          }
         },
         notifications: {
-          type: Boolean,
-          required: true
+          schema: {
+            type: Number,
+            required: true
+          }
         },
         notificationSound: {
-          type: Boolean,
-          required: true
+          schema: {
+            type: Number,
+            required: true
+          }
         }
       },
       SETTINGS_PRIMARY_KEY

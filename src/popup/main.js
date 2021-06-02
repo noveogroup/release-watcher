@@ -12,11 +12,12 @@ import {
   Option,
   Collapse,
   CollapseItem,
-  RadioGroup,
-  RadioButton,
   Badge,
   Pagination,
-  Slider
+  Slider,
+  Popover,
+  Popconfirm,
+  Tag
 } from 'element-ui'
 
 const components = {
@@ -29,11 +30,12 @@ const components = {
   Option,
   Collapse,
   CollapseItem,
-  RadioGroup,
-  RadioButton,
   Badge,
   Pagination,
-  Slider
+  Slider,
+  Popover,
+  Popconfirm,
+  Tag
 }
 
 Object.keys(components).forEach(key => {
@@ -41,7 +43,7 @@ Object.keys(components).forEach(key => {
 })
 
 /* eslint-disable no-new */
-new Vue({
+window.$vue = new Vue({
   el: '#app',
   render: h => h(App),
   store,

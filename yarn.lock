@@ -4104,6 +4104,11 @@ detect-node@^2.0.4:
   resolved "https://registry.yarnpkg.com/detect-node/-/detect-node-2.0.5.tgz#9d270aa7eaa5af0b72c4c9d9b814e7f4ce738b79"
   integrity sha512-qi86tE6hRcFHy8jI1m2VG+LaPUR1LhqDa5G8tVjuUXmOrpuAgqsA1pN0+ldgr3aKUH+QLI9hCY/OcRYisERejw==
 
+dexie@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/dexie/-/dexie-3.0.3.tgz#ede63849dfe5f07e13e99bb72a040e8ac1d29dab"
+  integrity sha512-BSFhGpngnCl1DOr+8YNwBDobRMH0ziJs2vts69VilwetHYOtEDcLqo7d/XiIphM0tJZ2rPPyAGd31lgH2Ln3nw==
+
 diff-sequences@^24.9.0:
   version "24.9.0"
   resolved "https://registry.nlark.com/diff-sequences/download/diff-sequences-24.9.0.tgz?cache=0&sync_timestamp=1621937263741&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fdiff-sequences%2Fdownload%2Fdiff-sequences-24.9.0.tgz#5715d6244e2aa65f48bba0bc972db0b0b11e95b5"
@@ -5826,11 +5831,6 @@ indent-string@^2.1.0:
   integrity sha1-ji1INIdCEhtKghi3oTfppSBJ3IA=
   dependencies:
     repeating "^2.0.0"
-
-indexeddb-orm@^3.2.1:
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/indexeddb-orm/-/indexeddb-orm-3.2.1.tgz#772b6c72b81720ef35c086c9e650bea3b315695b"
-  integrity sha512-AixLwAJWvDOjU3z0bseEWJ1yZGbnJWx96L+5wYmbrZL7PHSs1W+J1OVYaikZXG3XgCoBCSu+2uvp8XRuG3csrA==
 
 indexes-of@^1.0.1:
   version "1.0.1"
