@@ -9,29 +9,11 @@ import {
 } from './styleLogic'
 import { isWatching, updateRepo } from '../bgConnect'
 import { watchIcon, watchDisabledIcon } from '@/utils/getAssets'
+import { releasesHeader } from '../pageElements'
 
 let watchState = false
-
-const hTwoTags = document.getElementsByTagName('h2')
-export const releasesHeader = Array.from(hTwoTags).find(header => {
-  return (
-    header.firstElementChild?.baseURI + '/releases' ===
-    header.firstElementChild?.href
-  )
-})
-export const iconContainer = document.createElement('div')
-
+const iconContainer = document.createElement('div')
 const text = document.createElement('span')
-iconContainer.appendChild(text)
-applyStylesFromObj(iconContainerStyles, iconContainer)
-applyStylesFromObj(releasesHeaderStyles, releasesHeader)
-iconContainer.classList.add('Counter')
-
-iconContainer.addEventListener('click', e => {
-  watchState = !watchState
-  watchState ? updateRepo(true) : updateRepo(false)
-  toggleIcon()
-})
 
 const toggleIcon = () => {
   if (iconContainer.children.length > 1) {
@@ -61,6 +43,23 @@ const toggleIcon = () => {
 }
 
 export async function init () {
+  iconContainer.appendChild(text)
+  try {
+    applyStylesFromObj(iconContainerStyles, iconContainer)
+    applyStylesFromObj(releasesHeaderStyles, releasesHeader)
+  } catch (error) {
+    console.error('Releases header not found', error)
+  }
+
+  iconContainer.classList.add('Counter')
+
+  iconContainer.addEventListener('click', e => {
+    watchState = !watchState
+    watchState ? updateRepo(true) : updateRepo(false)
+    toggleIcon()
+  })
+
   watchState = await isWatching()
+  releasesHeader.appendChild(iconContainer)
   toggleIcon()
 }
