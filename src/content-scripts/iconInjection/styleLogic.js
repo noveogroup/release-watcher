@@ -15,7 +15,8 @@ const iconContainerStyles = {
   minWidth: '24px',
   height: '20px',
   cursor: 'pointer',
-  display: 'flex'
+  display: 'flex',
+  color: 'var(--color-btn-primary-icon)'
 }
 
 const iconContainerStylesPrimary = {
@@ -23,11 +24,11 @@ const iconContainerStylesPrimary = {
 }
 
 const iconContainerStylesDanger = {
-  backgroundColor: 'var(--color-downvote-icon-bg, #78191b)'
+  backgroundColor: 'var(--color-btn-error-bg, #78191b)'
 }
 
 const iconStyles = {
-  fill: 'var(--color-text-primary)',
+  fill: 'currentColor',
   height: '20px'
 }
 

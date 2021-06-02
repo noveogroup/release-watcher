@@ -6,6 +6,10 @@ export default class SettingsModel extends BaseModel {
     super(
       SETTINGS_TABLE_NAME,
       {
+        index: {
+          type: Number,
+          required: true
+        },
         requestInterval: {
           type: Number,
           required: true

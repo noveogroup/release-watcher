@@ -1,10 +1,9 @@
 import { RELEASE_CHECK_ALARM_NAME } from '@/constants'
-import RepoController from '@/controllers/RepoController'
+import { __RepoController } from '@/store/modules/repositories/actions'
 import { checkReleases } from './checkReleases'
 
 chrome.alarms.onAlarm.addListener(async alarm => {
   if (alarm.name !== RELEASE_CHECK_ALARM_NAME) return
-  const repoController = new RepoController()
-  const repos = await repoController.getActiveRepos()
+  const repos = await __RepoController.getActiveRepos()
   repos.forEach(repo => checkReleases(repo, false))
 })

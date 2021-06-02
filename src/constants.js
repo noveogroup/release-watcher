@@ -4,4 +4,4 @@ export const defaultRequestInterval = 15
 export const defaultNotificationSetting = true
 export const defaultNotificationSoundSetting = false
 
-export const baseApiUrl = 'https://api.github.com/repos'
+export const GITHUB_API_URL = 'https://api.github.com/repos'

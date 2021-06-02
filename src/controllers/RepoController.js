@@ -9,10 +9,9 @@ export default class RepoController extends BaseController {
 
   async getActiveRepos () {
     try {
-      const tables = await this.db.connect()
-      const res = await tables[REPOS_TABLE_NAME].where('disabled', false).all()
+      const repos = await this.getAll({ filters: { disabled: false } })
 
-      return Promise.resolve(res)
+      return Promise.resolve(repos)
     } catch (error) {
       return Promise.reject(error)
     }
@@ -20,14 +19,12 @@ export default class RepoController extends BaseController {
 
   async incrementNewReleasesCount (id, increment = 1) {
     try {
-      const tables = await this.db.connect()
-      const repo = await tables[REPOS_TABLE_NAME].find(id)
-      const res = tables[REPOS_TABLE_NAME].update({
-        ...repo,
+      const repo = await this.getOne(id)
+      const repos = await this.update(id, {
         newReleasesCount: repo.newReleasesCount + increment
       })
 
-      return Promise.resolve(res)
+      return Promise.resolve(repos)
     } catch (error) {
       console.log(error)
       return Promise.reject(error)

@@ -4,29 +4,25 @@ import { REGEX_UUID } from '../db/constants'
 const baseColumns = {
   uuid: {
     type: String,
-    required: false,
+    required: true,
     match: REGEX_UUID,
     length: 36
   },
-  index: {
-    type: Number,
-    required: false
-  },
   created_at: {
-    type: Date,
-    required: false
+    type: Number,
+    required: true
   },
   updated_at: {
-    type: Date,
-    required: false
+    type: Number,
+    required: true
   },
   deleted_at: {
-    type: Date,
-    required: false
+    type: Number,
+    required: true
   },
   deleted: {
     type: Boolean,
-    required: false
+    required: true
   }
 }
 
@@ -61,7 +57,7 @@ export default class BaseModel extends Schema {
       table.columns.push({
         name: columnName,
         attributes: {
-          unique: columnName === tableName
+          unique: columnName === primary
         }
       })
       return table

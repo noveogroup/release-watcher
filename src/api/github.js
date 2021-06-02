@@ -2,11 +2,10 @@ import axios from '@/axios'
 
 const fetchWithoutBase = async url => {
   try {
-    console.log(url)
-    const res = await axios.get(url)
-    return res.data
-  } catch (e) {
-    console.log('GitHub fetch error', e)
+    const { data } = await axios.get(url)
+    return data
+  } catch (error) {
+    console.log('fetchWithoutBase / error', error)
   }
 }
 

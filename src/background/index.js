@@ -1,7 +1,7 @@
 import './alarms'
 import './csConnect'
 import { RELEASE_CHECK_ALARM_NAME } from '@/constants'
-import SettingsController from '@/controllers/SettingsController'
+import { __SettingsController } from '@/store/modules/settings/actions'
 
 chrome.runtime.onInstalled.addListener(async function () {
   browser.browserAction.setBadgeBackgroundColor({ color: '#fcc' })
@@ -20,10 +20,8 @@ chrome.runtime.onInstalled.addListener(async function () {
   })
 
   // regular repeating release chceck
-  const settingsController = new SettingsController()
-  await settingsController.setDefaultIfEmpty()
-  const currSettings = await settingsController.getOne(1)
+  const settings = await __SettingsController.getSettings()
   browser.alarms.create(RELEASE_CHECK_ALARM_NAME, {
-    periodInMinutes: currSettings.requestInterval
+    periodInMinutes: settings.requestInterval
   })
 })

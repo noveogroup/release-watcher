@@ -19,8 +19,8 @@
       placeholder="/owner/name"
       :value="urlInput"
       @input="setRepoUrl"
-      clearable>
-    </el-input>
+      clearable
+    />
 
     <el-button
       class="button"
@@ -38,7 +38,7 @@ export default {
 
   data: () => ({
     source: 'https://github.com',
-    urlInput: null,
+    urlInput: '',
 
     options: [
       {
@@ -53,7 +53,9 @@ export default {
       this.urlInput = url.replace(this.source, '')
     },
     addUrl () {
-      this.$emit('onUrlAdd', this.urlInput)
+      const url = this.urlInput
+      this.urlInput = ''
+      this.$emit('onUrlAdd', url)
     }
   }
 }

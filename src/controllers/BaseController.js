@@ -2,6 +2,8 @@ import { v4 as uuidv4 } from 'uuid'
 import { isObject } from '@/utils/typeChecker'
 import db from '../db'
 
+const _sortBy = require('lodash.sortby')
+
 /** BaseController */
 export default class BaseController {
   /**
@@ -38,26 +40,66 @@ export default class BaseController {
   }
 
   /**
-   * Retrieving all records of a database table with pagination
-   * @param {Number} page - The current page, default 1.
-   * @param {Number} perPage - The per page, default 25.
-   * @returns {Promise<Model[]|Error>} - Get all record in the database or error
+   * Getting the total number of records in a table
+   * @param {Object} filters = Filters for request
+   * @returns {Promise<Number|Error>} - the total number of records in a table
    */
-  async getAll (page = 1, perPage = 25) {
+  async getCount (filters = {}) {
     try {
       const { db, tableName } = this
       const tables = await db.connect()
 
-      const total = await tables[tableName].count()
+      const filteredTable = Object.entries(filters)
+        .reduce((table, [key, value]) => {
+          return table.where(key, value)
+        }, tables[tableName])
+        .where('deleted', false)
+      const count = await filteredTable.count()
 
-      const end = page * perPage
+      return Promise.resolve(count)
+    } catch (error) {
+      return Promise.reject(error)
+    }
+  }
+
+  /**
+   * Retrieving all records of a database table with pagination
+   * @param {Number} page - The current page, default 1.
+   * @param {Number} perPage - The per page, default 25.
+   * @param {('DESC'|'ASC')} sortOrder - The Sorting order
+   * @param {String[]} sortBy - The array of sorting params
+   * @param {Object} filters = Filters for request
+   * @returns {Promise<Model[]|Error>} - Get all record in the database or error
+   */
+  async getAll ({
+    page = 1,
+    perPage = 5,
+    sortOrder = 'DESC',
+    sortBy = [],
+    filters = {}
+  } = {}) {
+    try {
+      const { db, tableName } = this
+      const tables = await db.connect()
+
+      const filteredTable = Object.entries(filters)
+        .reduce((table, [key, value]) => {
+          return table.where(key, value)
+        }, tables[tableName])
+        .where('deleted', false)
+
+      const total = await filteredTable.count()
+
+      const end = (page * perPage) > total ? total : (page * perPage)
       const start = end - perPage
 
-      const result = await tables[tableName]
-        .between('index', start > 0 ? start : 1, end > total ? total : end)
-        .all()
+      const result = await filteredTable.all()
 
-      return Promise.resolve(result)
+      const sortedResult = _sortBy(result, [...new Set(['created_at', 'updated_at', ...sortBy])])
+      const sortedResultByOrder = sortOrder === 'ASC' ? sortedResult.reverse() : sortedResult
+      const paginatedResult = sortedResultByOrder.slice(start, end)
+
+      return Promise.resolve(paginatedResult)
     } catch (error) {
       return Promise.reject(error)
     }
@@ -73,14 +115,11 @@ export default class BaseController {
       const { db, model, tableName } = this
       const tables = await db.connect()
 
-      const total = await tables[tableName].count()
-
       const baseFields = {
         uuid: uuidv4(),
-        index: total + 1,
-        created_at: new Date(),
-        updated_at: new Date(),
-        deleted_at: new Date(),
+        created_at: new Date().getTime(),
+        updated_at: new Date().getTime(),
+        deleted_at: new Date().getTime(),
         deleted: false
       }
 
@@ -92,7 +131,7 @@ export default class BaseController {
       const errors = model.validate(data)
       if (errors.length) throw new Error(errors)
 
-      const result = await tables[tableName].create(payload)
+      const result = await tables[tableName].create(data)
 
       return Promise.resolve(result)
     } catch (error) {

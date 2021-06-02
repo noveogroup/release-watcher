@@ -7,18 +7,6 @@ export default class ReleaseController extends BaseController {
     super(RELEASES_TABLE_NAME, new ReleasesModel())
   }
 
-  async getReleasesByRepoID (id) {
-    try {
-      const { db } = this
-      const tables = await db.connect()
-
-      const res = await tables[RELEASES_TABLE_NAME].where('repoId', id).all()
-      return Promise.resolve(res)
-    } catch (error) {
-      return Promise.reject(error)
-    }
-  }
-
   async deleteReleasesByRepoID (id) {
     try {
       const { db } = this

@@ -1,16 +1,18 @@
-import ReleaseController from '@/controllers/ReleaseController'
-import RepoController from '@/controllers/RepoController'
-import api from '@/api/github'
-import { showNotification } from './notifications'
+import githubAPI from '@/api/github'
+
+import { __ReleaseController } from '@/store/modules/releases/actions'
+import { __RepoController } from '@/store/modules/repositories/actions'
+
 import { isArray } from '@/utils/typeChecker'
+import { showNotification } from './notifications'
 
 export const checkReleases = async (repo, initMode = false) => {
-  const releaseController = new ReleaseController()
-  const res = await api.fetchWithoutBase(repo.url)
-  if (!isArray(res)) return
-  res.forEach(async release => {
+  const releases = await githubAPI.fetchWithoutBase(repo.url)
+  if (!isArray(releases)) return
+
+  releases.forEach(async release => {
     try {
-      await releaseController.create({
+      await __ReleaseController.create({
         id: release.id,
         repoId: repo.id,
         name: repo.name,
@@ -23,12 +25,11 @@ export const checkReleases = async (repo, initMode = false) => {
       })
       if (!initMode) {
         showNotification(repo.name)
-        const repoController = new RepoController()
-        repoController.incrementNewReleasesCount(repo.id, 1)
+        __RepoController.incrementNewReleasesCount(repo.id, 1)
       }
     } catch (error) {
       if (error.target?.error?.code === 0) {
-        console.log('release already exists')
+        console.info('Release already exists')
         return
       }
       console.error(error)

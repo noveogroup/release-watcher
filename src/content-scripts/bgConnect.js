@@ -1,6 +1,6 @@
-import { baseApiUrl } from '@/constants'
+import { GITHUB_API_URL } from '@/constants'
 
-const url = baseApiUrl + window.location.pathname + '/releases'
+const url = GITHUB_API_URL + window.location.pathname + '/releases'
 const name = window.location.pathname.split('/')[2]
 const id = parseInt(
   document
