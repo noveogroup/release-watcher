@@ -1,15 +1,15 @@
 import BaseController from './BaseController'
 import { REPOS_TABLE_NAME } from '../db/constants'
-import RepoModel from '../models/RepoModel'
+import { __RepoModel } from '../db'
 
 export default class RepoController extends BaseController {
   constructor () {
-    super(REPOS_TABLE_NAME, new RepoModel())
+    super(REPOS_TABLE_NAME, __RepoModel.schema)
   }
 
   async getActiveRepos () {
     try {
-      const repos = await this.getAll({ filters: { disabled: false } })
+      const repos = await this.getAll({ filters: { disabled: 0 } })
 
       return Promise.resolve(repos)
     } catch (error) {

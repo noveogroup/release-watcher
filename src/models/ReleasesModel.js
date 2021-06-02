@@ -1,4 +1,4 @@
-import BaseModel from './BaseModel'
+import BaseModel, { UNIQUE } from './BaseModel'
 import { RELEASES_TABLE_NAME, PRIMARY_KEY } from '../db/constants'
 
 export default class ReleasesModel extends BaseModel {
@@ -7,32 +7,47 @@ export default class ReleasesModel extends BaseModel {
       RELEASES_TABLE_NAME,
       {
         id: {
-          type: Number,
-          required: true
+          entry: UNIQUE,
+          schema: {
+            type: Number,
+            required: true
+          }
         },
         repoId: {
-          type: Number,
-          required: true
+          schema: {
+            type: Number,
+            required: true
+          }
         },
         url: {
-          type: String,
-          required: true
+          schema: {
+            type: String,
+            required: true
+          }
         },
         name: {
-          type: String,
-          required: false
+          schema: {
+            type: String,
+            required: false
+          }
         },
         new: {
-          type: Boolean,
-          required: true
+          schema: {
+            type: Number,
+            required: true
+          }
         },
         version: {
-          type: String,
-          required: true
+          schema: {
+            type: String,
+            required: true
+          }
         },
         body: {
-          type: String,
-          required: true
+          schema: {
+            type: String,
+            required: true
+          }
         }
       },
       PRIMARY_KEY

@@ -12,7 +12,7 @@ export default {
 
       return Promise.resolve(settings)
     } catch (error) {
-      console.log('store / settings / setSettings', error)
+      console.error('store / settings / setSettings', error)
     }
   },
   async updateSettings ({ commit }, newSettings) {
@@ -22,7 +22,7 @@ export default {
 
       return Promise.resolve(settings)
     } catch (error) {
-      console.log('store / settings / updateSettings', error)
+      console.error('store / settings / updateSettings', error)
     }
   }
 }

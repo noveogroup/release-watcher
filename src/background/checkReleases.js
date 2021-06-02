@@ -20,8 +20,8 @@ export const checkReleases = async (repo, initMode = false) => {
         body: release.body,
         url: release.html_url,
         version: release.tag_name,
-        new: !initMode,
-        disabled: false
+        new: Number(!initMode),
+        disabled: 0
       })
       if (!initMode) {
         showNotification(repo.name)

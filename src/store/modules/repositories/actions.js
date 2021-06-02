@@ -19,7 +19,7 @@ export default {
 
       return Promise.resolve(repos)
     } catch (error) {
-      console.log('store / repositories / getRepos', error)
+      console.error('store / repositories / getRepos', error)
     }
   },
   async getReposTotal ({ commit }) {
@@ -29,7 +29,7 @@ export default {
 
       return Promise.resolve(total)
     } catch (error) {
-      console.log('store / repositories / getReposTotal', error)
+      console.error('store / repositories / getReposTotal', error)
     }
   },
   async setRepo ({ state, commit, dispatch }, addingUrl) {
@@ -41,6 +41,7 @@ export default {
         url,
         name,
         language: language || 'Without language',
+        disabled: 0,
         newReleasesCount: 0
       }
       const dbRes = await __RepoController.create(repo)
@@ -55,7 +56,7 @@ export default {
 
       return Promise.resolve(dbRes)
     } catch (error) {
-      console.log('store / repositories / setRepo', error)
+      console.error('store / repositories / setRepo', error)
     }
   },
   async deleteRepo ({ state, commit, dispatch }, repoId) {
@@ -68,7 +69,7 @@ export default {
 
       return Promise.resolve(repo)
     } catch (error) {
-      console.log('store / repositories / deleteRepo', error)
+      console.error('store / repositories / deleteRepo', error)
     }
   }
 }

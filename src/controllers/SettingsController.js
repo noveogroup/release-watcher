@@ -5,11 +5,11 @@ import {
   defaultNotificationSetting,
   defaultNotificationSoundSetting
 } from '../constants'
-import SettingsModel from '../models/SettingsModel'
+import { __SettingsModel } from '../db'
 
 export default class SettingsController extends BaseController {
   constructor () {
-    super(SETTINGS_TABLE_NAME, new SettingsModel())
+    super(SETTINGS_TABLE_NAME, __SettingsModel.schema)
   }
 
   async getSettings () {
