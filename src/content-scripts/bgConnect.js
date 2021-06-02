@@ -1,22 +1,30 @@
-import { baseApiUrl } from '@/constants'
-
-const url = baseApiUrl + window.location.pathname + '/releases'
-const name = window.location.pathname.split('/')[2]
-const id = document
-  .querySelector("meta[name='octolytics-dimension-repository_id']")
-  ?.getAttribute('content')
-  ?.toString()
+import { GITHUB_API_URL } from '@/constants'
+import { pathName, id, name, getMostPopularLanguage } from './pageElements'
 
 export const isWatching = async () => {
-  return new Promise((resolve) => {
-    chrome.runtime.sendMessage({ requestType: 'checkWatchStatus', id }, function (response) {
-      resolve(response.exists)
-    })
+  return new Promise(resolve => {
+    chrome.runtime.sendMessage(
+      { requestType: 'checkWatchStatus', id },
+      function (response) {
+        resolve(response.exists)
+      }
+    )
   })
 }
 
-export const updateRepo = (isAdding) => {
-  chrome.runtime.sendMessage({ requestType: 'updateRepo', isAdding, id, url, name }, function (response) {
-    console.log(response)
-  })
+export const updateRepo = isAdding => {
+  chrome.runtime.sendMessage(
+    {
+      requestType: 'updateRepo',
+      isAdding,
+      id,
+      url: GITHUB_API_URL + pathName + +'/releases',
+      name,
+      language: getMostPopularLanguage(),
+      newReleasesCount: 0
+    },
+    function (response) {
+      console.log(response)
+    }
+  )
 }

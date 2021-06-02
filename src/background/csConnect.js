@@ -1,15 +1,14 @@
-import RepoController from '@/controllers/RepoController'
+import { __RepoController } from '@/store/modules/repositories/actions'
+import { checkReleases } from './checkReleases'
 
 chrome.runtime.onMessage.addListener(async function (
   request,
   sender,
   sendResponse
 ) {
-  const repoController = new RepoController()
-
   if (request.requestType === 'checkWatchStatus') {
     try {
-      const exists = await repoController.getOne(request.id)
+      const exists = await __RepoController.getOne(request.id)
       sendResponse({ exists: Boolean(exists), success: true })
     } catch (error) {
       console.error('erorr in db!', error)
@@ -21,14 +20,11 @@ chrome.runtime.onMessage.addListener(async function (
   if (request.requestType === 'updateRepo') {
     try {
       if (request.isAdding) {
-        await repoController.create({
-          id: request.id,
-          name: request.name,
-          url: request.url,
-          disabled: false
-        })
+        delete request.isAdding
+        await __RepoController.create(request)
+        checkReleases(request, true)
       } else {
-        await repoController.delete(request.id)
+        await __RepoController.delete(request.id)
       }
       sendResponse({ success: true })
     } catch (error) {

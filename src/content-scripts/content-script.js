@@ -1,11 +1,8 @@
 import { isMainRepoPage } from '../utils/urlWorkers'
-import { iconContainer, releasesHeader, init } from './iconInjection'
+import { init } from './iconInjection'
 
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  if (request.message === 'TabUpdated') {
-    if (isMainRepoPage(document.location.href)) {
-      releasesHeader.appendChild(iconContainer)
-      init()
-    }
+chrome.runtime.onMessage.addListener(function (request) {
+  if (request.message === 'TabUpdated' && isMainRepoPage(document.location.href)) {
+    init()
   }
 })

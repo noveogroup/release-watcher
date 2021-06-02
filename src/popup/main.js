@@ -2,13 +2,48 @@ import Vue from 'vue'
 import App from './App.vue'
 import store from '@/store'
 import router from './router'
-import { Button, Input } from 'element-ui'
+import {
+  Button,
+  ButtonGroup,
+  Link,
+  Input,
+  Switch,
+  Select,
+  Option,
+  Collapse,
+  CollapseItem,
+  Badge,
+  Pagination,
+  Slider,
+  Popover,
+  Popconfirm,
+  Tag
+} from 'element-ui'
 
-Vue.use(Button)
-Vue.use(Input)
+const components = {
+  Button,
+  ButtonGroup,
+  Link,
+  Input,
+  Switch,
+  Select,
+  Option,
+  Collapse,
+  CollapseItem,
+  Badge,
+  Pagination,
+  Slider,
+  Popover,
+  Popconfirm,
+  Tag
+}
+
+Object.keys(components).forEach(key => {
+  Vue.use(components[key])
+})
 
 /* eslint-disable no-new */
-new Vue({
+window.$vue = new Vue({
   el: '#app',
   render: h => h(App),
   store,

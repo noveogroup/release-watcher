@@ -1,69 +1,118 @@
 <template>
-  <div class="home-view">
-    <WatchItem
-      :is-fetching="flags.isFetching"
-      @onAddBtnClick="addItem($event)"
+  <div class="home">
+
+    <h1>
+      Release watcher
+      <el-button
+        size="small"
+        icon="el-icon-s-tools"
+        @click="$router.push('/settings')"
+      />
+    </h1>
+
+    <TheUrlAdder
+      class="home__head"
+      @onUrlAdd="setRepo"
     />
-    <template>
-      {{ fetchedRepos }}
-    </template>
-    <div>
-      currentURL: {{ currentURL }}
-    </div>
+
+    <TheReposList
+      :repos="repos"
+      @onRemoveRepo="deleteRepo"
+    />
+
+    <el-pagination
+      class="home__pagination"
+      layout="prev, pager, next"
+      :total="total"
+      :page-size="pagination.perPage"
+      :hide-on-single-page="true"
+      @current-change="onPageChange"
+    />
+
   </div>
 </template>
 
 <script>
-import WatchItem from '../components/WatchItem'
-import { mapState } from 'vuex'
+import TheUrlAdder from '../components/home/TheUrlAdder'
 
-import { fetchRepo } from '../../axios'
-import { getUrlFromExt } from '../../utils/urlWorkers'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   components: {
-    WatchItem
+    TheReposList: () => import('../components/home/TheReposList'),
+    TheUrlAdder
   },
 
-  data () {
-    return {
-      fetchedRepos: [],
-
-      currentTabUrl: '',
-
-      flags: {
-        isFetching: false
-      }
+  data: () => ({
+    pagination: {
+      page: 1,
+      perPage: 5
     }
-  },
+  }),
 
   computed: {
-    ...mapState(['currentURL'])
+    ...mapState('currentURL', ['currentURL']),
+    ...mapState('repositories', ['repos', 'total'])
   },
 
-  async mounted () {
-    this.$store.dispatch('setCurrentURL', await getUrlFromExt())
+  async created () {
+    try {
+      await this.getRepos(this.pagination)
+      await this.getReposTotal()
+    } catch (error) {
+      console.error(error)
+    }
   },
 
   methods: {
-    async addItem (item) {
-      this.flags.isFetching = true
+    ...mapActions('repositories', [
+      'deleteRepo',
+      'setRepo',
+      'getRepos',
+      'getReposTotal'
+    ]),
+
+    async onPageChange (page) {
+      this.pagination.page = page
 
       try {
-        this.fetchedRepos.push(await fetchRepo(item))
-        this.currentTabUrl = await getUrlFromExt()
-      } catch (e) {
-        console.log('addItem error', e)
-      } finally {
-        this.flags.isFetching = false
+        await this.getRepos(this.pagination)
+      } catch (error) {
+        console.error(error)
       }
     }
-
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.home-view {
+.home {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  & > h1 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0;
+  }
+
+  &__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  &__tags {
+    margin-bottom: 12px;
+  }
+
+  &__pagination {
+    margin-top: auto;
+    padding: 10px 0;
+    text-align: center;
+  }
 }
 </style>
