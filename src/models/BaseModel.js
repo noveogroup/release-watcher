@@ -60,7 +60,7 @@ export default class BaseModel {
     this.primary = primary
   }
 
-  get schema () {
+  get __Schema () {
     return new Schema(
       Object.entries(this.columns).reduce((schema, [columnName, { schema: columnSchema }]) => {
         schema[columnName] = columnSchema

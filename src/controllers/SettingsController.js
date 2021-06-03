@@ -9,7 +9,7 @@ import { __SettingsModel } from '../db'
 
 export default class SettingsController extends BaseController {
   constructor () {
-    super(SETTINGS_TABLE_NAME, __SettingsModel.schema)
+    super(SETTINGS_TABLE_NAME, __SettingsModel.__Schema)
   }
 
   async getSettings () {

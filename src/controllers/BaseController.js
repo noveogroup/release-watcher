@@ -6,16 +6,16 @@ import __db from '../db'
 export default class BaseController {
   /**
    * @param {String} tableName - The table name
-   * @param {Object} schema - The schema object
+   * @param {Object} __Schema - The Schema instance
    * @param {Boolean} softDelete - The soft delete, default false, if true then cannot delete a row from the table.
    */
-  constructor (tableName, schema, softDelete = false) {
-    if (!tableName || !schema) {
+  constructor (tableName, __Schema, softDelete = false) {
+    if (!tableName || !__Schema) {
       throw new Error('BaseController - tableName and schema is required')
     }
 
     this.tableName = tableName
-    this.schema = schema
+    this.__Schema = __Schema
     this.softDelete = softDelete
     this.db = __db
   }
@@ -90,7 +90,7 @@ export default class BaseController {
    */
   async create (payload = {}) {
     try {
-      const { db, tableName, schema } = this
+      const { db, tableName, __Schema } = this
 
       const data = {
         ...(isObject(payload) ? payload : {}),
@@ -101,7 +101,7 @@ export default class BaseController {
         deleted: 0
       }
 
-      const errors = schema.validate(data)
+      const errors = __Schema.validate(data)
       if (errors.length) throw new Error(errors)
 
       await db[tableName].add(data)
@@ -120,7 +120,7 @@ export default class BaseController {
    */
   async update (primaryKeyValue, payload = {}) {
     try {
-      const { db, tableName, schema } = this
+      const { db, tableName, __Schema } = this
 
       const currentFields = await this.getOne(primaryKeyValue)
 
@@ -135,7 +135,7 @@ export default class BaseController {
         updated_at: new Date().getTime()
       }
 
-      const errors = schema.validate(data)
+      const errors = __Schema.validate(data)
       if (errors.length) throw new Error(errors)
 
       await db[tableName].put(data, primaryKeyValue)

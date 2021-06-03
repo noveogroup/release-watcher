@@ -4,7 +4,7 @@ import { __ReleasesModel } from '../db'
 
 export default class ReleaseController extends BaseController {
   constructor () {
-    super(RELEASES_TABLE_NAME, __ReleasesModel.schema)
+    super(RELEASES_TABLE_NAME, __ReleasesModel.__Schema)
   }
 
   async deleteReleasesByRepoID (repoId) {

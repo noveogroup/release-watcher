@@ -43,7 +43,7 @@ Object.keys(components).forEach(key => {
 })
 
 /* eslint-disable no-new */
-window.$vue = new Vue({
+new Vue({
   el: '#app',
   render: h => h(App),
   store,

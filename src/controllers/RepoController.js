@@ -4,7 +4,7 @@ import { __RepoModel } from '../db'
 
 export default class RepoController extends BaseController {
   constructor () {
-    super(REPOS_TABLE_NAME, __RepoModel.schema)
+    super(REPOS_TABLE_NAME, __RepoModel.__Schema)
   }
 
   async getActiveRepos () {
