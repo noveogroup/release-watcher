@@ -20,6 +20,8 @@
       @onRemoveRepo="deleteRepo"
     />
 
+    <TheReposPlaceholder v-if="repos.length === 0" />
+
     <el-pagination
       class="home__pagination"
       layout="prev, pager, next"
@@ -40,6 +42,7 @@ import { mapState, mapActions } from 'vuex'
 export default {
   components: {
     TheReposList: () => import('../components/home/TheReposList'),
+    TheReposPlaceholder: () => import('../components/home/TheReposPlaceholder'),
     TheUrlAdder
   },
 

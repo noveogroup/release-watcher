@@ -1,18 +1,5 @@
 <template>
   <div class="TheUrlAdder">
-    <el-select
-      v-model="source"
-      class="select"
-      :disabled="options.length < 2"
-      :placeholder="options[0].label"
-    >
-      <el-option
-        v-for="item in options"
-        :key="item.value"
-        :label="item.label"
-        :value="item.value">
-      </el-option>
-    </el-select>
 
     <el-input
       class="input"
@@ -20,8 +7,9 @@
       :value="urlInput"
       @input="setRepoUrl"
       clearable
-    />
-
+    >
+      <template slot="prepend">github.com</template></el-input
+    >
     <el-button
       class="button"
       type="primary"
@@ -38,14 +26,7 @@ export default {
 
   data: () => ({
     source: 'https://github.com',
-    urlInput: '',
-
-    options: [
-      {
-        value: 'https://github.com',
-        label: 'GitHub'
-      }
-    ]
+    urlInput: ''
   }),
 
   methods: {
