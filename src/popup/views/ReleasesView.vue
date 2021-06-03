@@ -16,7 +16,10 @@
     <TheRepoToggle
       :value="toggle"
       @onChange="onToggle($event)"
+      v-if="releases.length > 0"
     />
+
+    <TheReleasesPlaceholder v-if="releases.length === 0" />
 
     <TheReleasesList
       :isAllExpanded="toggle"
@@ -40,12 +43,14 @@ import { mapState, mapActions } from 'vuex'
 
 import TheRepoToggle from '../components/repo/TheRepoToggle'
 import TheReleasesList from '../components/releases/TheReleasesList'
+import TheReleasesPlaceholder from '../components/releases/TheReleasesPlaceholder'
 
 export default {
   name: 'RepoView',
   components: {
     TheRepoToggle,
-    TheReleasesList
+    TheReleasesList,
+    TheReleasesPlaceholder
   },
 
   data: () => ({

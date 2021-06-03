@@ -3,12 +3,10 @@
     <el-collapse
       :value="expanded"
       @change="onCollapseChange($event)"
+      v-for="release in releases"
+      :key="release.id"
     >
-      <TheReleasesRow
-        v-for="release in releases"
-        :key="release.id"
-        :release="release"
-      />
+      <TheReleasesRow :release="release" />
     </el-collapse>
   </div>
 </template>
