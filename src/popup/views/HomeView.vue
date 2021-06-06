@@ -1,6 +1,5 @@
 <template>
   <div class="home">
-
     <h1>
       Release watcher
       <el-button
@@ -10,15 +9,9 @@
       />
     </h1>
 
-    <TheUrlAdder
-      class="home__head"
-      @onUrlAdd="setRepo"
-    />
+    <TheUrlAdder class="home__head" @onUrlAdd="setRepo" />
 
-    <TheReposList
-      :repos="repos"
-      @onRemoveRepo="deleteRepo"
-    />
+    <TheReposList :repos="repos" @onRemoveRepo="deleteRepo" />
 
     <el-pagination
       class="home__pagination"
@@ -29,6 +22,15 @@
       @current-change="onPageChange"
     />
 
+    <span class="home__credits"
+      >Made by
+      <a
+        href="https://noveogroup.com/"
+        target="_blank"
+        class="home__credits--link"
+        >Noveo</a
+      ></span
+    >
   </div>
 </template>
 
@@ -113,6 +115,17 @@ export default {
     margin-top: auto;
     padding: 10px 0;
     text-align: center;
+  }
+
+  &__credits {
+    text-align: end;
+    margin-top: auto;
+    margin-bottom: 0;
+
+    &--link {
+      text-decoration: none;
+      color: #409eff;
+    }
   }
 }
 </style>
