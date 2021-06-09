@@ -17,7 +17,8 @@ import {
   Slider,
   Popover,
   Popconfirm,
-  Tag
+  Tag,
+  Divider
 } from 'element-ui'
 
 const components = {
@@ -35,7 +36,8 @@ const components = {
   Slider,
   Popover,
   Popconfirm,
-  Tag
+  Tag,
+  Divider
 }
 
 Object.keys(components).forEach(key => {
