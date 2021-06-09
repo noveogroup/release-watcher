@@ -4,10 +4,11 @@ import { __ReleaseController } from '@/store/modules/releases/actions'
 import { __RepoController } from '@/store/modules/repositories/actions'
 
 import { isArray } from '@/utils/typeChecker'
+import badge from './badge'
 import { showNotification } from './notifications'
 
 export const checkReleases = async (repo, initMode = false) => {
-  const releases = await githubAPI.fetchWithoutBase(repo.url)
+  const releases = await githubAPI.fetchWithoutBase(repo.url + '/releases')
   if (!isArray(releases)) return
 
   releases.forEach(async release => {
@@ -24,11 +25,17 @@ export const checkReleases = async (repo, initMode = false) => {
         disabled: 0
       })
       if (!initMode) {
+        await __RepoController.incrementNewReleasesCount(repo.id, 1)
+        const allRepos = await __RepoController.getAll(0, 0)
+        const allNewCount = allRepos.reduce(
+          (newReleases, repo) => newReleases + repo.newReleasesCount,
+          0
+        )
         showNotification(repo.name)
-        __RepoController.incrementNewReleasesCount(repo.id, 1)
+        badge.set(allNewCount)
       }
     } catch (error) {
-      if (error.target?.error?.code === 0) {
+      if (error.name === 'ConstraintError') {
         console.info('Release already exists')
         return
       }
