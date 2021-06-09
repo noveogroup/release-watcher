@@ -10,7 +10,7 @@ export async function showNotification (repoName) {
   browser.notifications.create('', {
     title: `New version for ${repoName} was just released!`,
     message: 'Check it out in Release Watcher',
-    iconUrl: '/icons/128.png',
+    iconUrl: '/icons/128_warning.png',
     type: 'basic',
     silent: settings.notificationSound || false
   })
