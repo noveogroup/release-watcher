@@ -1,14 +1,21 @@
 <template>
-  <router-view class="router-view"/>
+  <div class="__app__">
+    <router-view />
+    <Credits />
+  </div>
 </template>
 
 <script>
 import { mapMutations } from 'vuex'
-import { getUrlFromExt } from '../utils/urlWorkers'
 import { SET_CURRENT_URL } from '@/store/modules/currentURL/mutation-types'
+import { getUrlFromExt } from '../utils/urlWorkers'
+import Credits from '@/popup/components/Credits.vue'
 
 export default {
   name: 'App',
+  components: {
+    Credits
+  },
   async created () {
     try {
       const currentURL = await getUrlFromExt()
@@ -44,7 +51,9 @@ html {
     height: 100%;
   }
 
-  .router-view {
+  .__app__ {
+    display: flex;
+    flex-direction: column;
     height: 100%;
   }
 }

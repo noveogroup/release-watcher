@@ -1,6 +1,5 @@
 <template>
   <div class="releases">
-
     <div>
       <el-button
         icon="el-icon-back"

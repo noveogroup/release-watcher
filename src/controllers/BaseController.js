@@ -17,7 +17,7 @@ export default class BaseController {
     this.tableName = tableName
     this.__Schema = __Schema
     this.softDelete = softDelete
-    this.db = __db
+    this.__db = __db
   }
 
   /**
@@ -27,8 +27,8 @@ export default class BaseController {
    */
   async getOne (primaryKeyValue) {
     try {
-      const { db, tableName } = this
-      const result = await db[tableName].get(primaryKeyValue)
+      const { __db, tableName } = this
+      const result = await __db[tableName].get(primaryKeyValue)
 
       return Promise.resolve(result)
     } catch (error) {
@@ -43,8 +43,8 @@ export default class BaseController {
    */
   async getCount (filters = {}) {
     try {
-      const { db, tableName } = this
-      const count = await db[tableName]
+      const { __db, tableName } = this
+      const count = await __db[tableName]
         .where({ ...filters, deleted: 0 })
         .count()
 
@@ -67,10 +67,10 @@ export default class BaseController {
     filters = {}
   } = {}) {
     try {
-      const { db, tableName } = this
+      const { __db, tableName } = this
 
       const offset = (page * limit) - limit
-      const result = await db[tableName]
+      const result = await __db[tableName]
         .where({ ...filters, deleted: 0 })
         .reverse()
         .offset(offset)
@@ -90,7 +90,7 @@ export default class BaseController {
    */
   async create (payload = {}) {
     try {
-      const { db, tableName, __Schema } = this
+      const { __db, tableName, __Schema } = this
 
       const data = {
         ...(isObject(payload) ? payload : {}),
@@ -104,7 +104,7 @@ export default class BaseController {
       const errors = __Schema.validate(data)
       if (errors.length) throw new Error(errors)
 
-      await db[tableName].add(data)
+      await __db[tableName].add(data)
 
       return Promise.resolve(data)
     } catch (error) {
@@ -120,7 +120,7 @@ export default class BaseController {
    */
   async update (primaryKeyValue, payload = {}) {
     try {
-      const { db, tableName, __Schema } = this
+      const { __db, tableName, __Schema } = this
 
       const currentFields = await this.getOne(primaryKeyValue)
 
@@ -138,7 +138,7 @@ export default class BaseController {
       const errors = __Schema.validate(data)
       if (errors.length) throw new Error(errors)
 
-      await db[tableName].put(data, primaryKeyValue)
+      await __db[tableName].put(data, primaryKeyValue)
 
       return Promise.resolve(data)
     } catch (error) {
@@ -153,7 +153,7 @@ export default class BaseController {
    */
   async delete (primaryKeyValue) {
     try {
-      const { db, tableName, softDelete } = this
+      const { __db, tableName, softDelete } = this
 
       const currentFields = await this.getOne(primaryKeyValue)
       const deletableFields = (isObject(currentFields) ? currentFields : {})
@@ -167,7 +167,7 @@ export default class BaseController {
         return Promise.resolve(result)
       }
 
-      await db[tableName].delete(primaryKeyValue)
+      await __db[tableName].delete(primaryKeyValue)
 
       return Promise.resolve(deletableFields)
     } catch (error) {

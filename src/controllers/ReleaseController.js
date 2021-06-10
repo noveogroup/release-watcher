@@ -9,8 +9,8 @@ export default class ReleaseController extends BaseController {
 
   async deleteReleasesByRepoID (repoId) {
     try {
-      const { db } = this
-      const result = await db[RELEASES_TABLE_NAME].where({ repoId }).delete()
+      const { __db } = this
+      const result = await __db[RELEASES_TABLE_NAME].where({ repoId }).delete()
 
       return Promise.resolve(result)
     } catch (error) {

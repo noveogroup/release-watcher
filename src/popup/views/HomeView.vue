@@ -23,16 +23,6 @@
       :hide-on-single-page="true"
       @current-change="onPageChange"
     />
-
-    <span class="home__credits"
-      >Made by
-      <a
-        href="https://noveogroup.com/"
-        target="_blank"
-        class="home__credits--link"
-        >Noveo</a
-      ></span
-    >
   </div>
 </template>
 
@@ -118,17 +108,6 @@ export default {
     margin-top: auto;
     padding: 10px 0;
     text-align: center;
-  }
-
-  &__credits {
-    text-align: end;
-    margin-top: auto;
-    margin-bottom: 0;
-
-    &--link {
-      text-decoration: none;
-      color: #409eff;
-    }
   }
 }
 </style>
