@@ -10,7 +10,7 @@
       class="repo__row"
     >
       <el-link
-        :href="repo.url"
+        @click="onViewRepo(repo)"
         :title="repo.name"
         target="_blank"
         class="repo__name"
