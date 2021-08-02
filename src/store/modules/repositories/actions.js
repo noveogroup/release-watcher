@@ -1,4 +1,4 @@
-import axios from '@/axios'
+import githubAPI from '@/api/github'
 import { GITHUB_API_URL } from '@/constants'
 import {
   SET_REPOS,
@@ -34,8 +34,15 @@ export default {
   },
   async setRepo ({ state, commit, dispatch }, addingUrl) {
     try {
-      const { data } = await axios.get(GITHUB_API_URL + addingUrl)
-      const { id, url, full_name: name, language = 'Without language' } = data
+      const fetchedRepo = await githubAPI.fetchWithoutBase(
+        GITHUB_API_URL + addingUrl
+      )
+      const {
+        id,
+        url,
+        full_name: name,
+        language = 'Without language'
+      } = fetchedRepo
       const repo = {
         id,
         url,
