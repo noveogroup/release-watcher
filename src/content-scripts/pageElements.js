@@ -30,3 +30,12 @@ export const getMostPopularLanguage = () => {
     return 'no language found'
   }
 }
+
+export const privateRepoCheck = () => {
+  try {
+    return document.getElementsByTagName('h1')[0].innerText.endsWith('Private')
+  } catch (error) {
+    console.error('h1 tag not found')
+    return false
+  }
+}

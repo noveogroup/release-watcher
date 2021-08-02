@@ -9,7 +9,7 @@ import {
 } from './styleLogic'
 import { isWatching, updateRepo } from '../bgConnect'
 import { watchIcon, watchDisabledIcon } from '@/utils/getAssets'
-import { releasesHeader } from '../pageElements'
+import { releasesHeader, privateRepoCheck } from '../pageElements'
 
 let watchState = false
 const iconContainer = document.createElement('div')
@@ -43,6 +43,8 @@ const toggleIcon = () => {
 }
 
 export async function init () {
+  if (privateRepoCheck()) return
+
   iconContainer.appendChild(text)
   try {
     applyStylesFromObj(iconContainerStyles, iconContainer)
