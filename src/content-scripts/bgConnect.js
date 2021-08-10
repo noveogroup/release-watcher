@@ -18,7 +18,7 @@ export const updateRepo = isAdding => {
       requestType: 'updateRepo',
       isAdding,
       id,
-      url: GITHUB_API_URL + pathName + +'/releases',
+      url: GITHUB_API_URL + pathName,
       name,
       language: getMostPopularLanguage(),
       newReleasesCount: 0

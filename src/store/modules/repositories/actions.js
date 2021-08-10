@@ -8,6 +8,7 @@ import {
 } from './mutation-types'
 
 import RepoController from '@/controllers/RepoController'
+import badge from '@/background/badge'
 
 export const __RepoController = new RepoController()
 
@@ -64,6 +65,7 @@ export default {
       return Promise.resolve(dbRes)
     } catch (error) {
       console.error('store / repositories / setRepo', error)
+      return Promise.reject(error)
     }
   },
   async deleteRepo ({ state, commit, dispatch }, repoId) {
@@ -77,6 +79,19 @@ export default {
       return Promise.resolve(repo)
     } catch (error) {
       console.error('store / repositories / deleteRepo', error)
+    }
+  },
+  async decrementNewReleasesCount ({ commit }, repoId) {
+    try {
+      await __RepoController.incrementNewReleasesCount(repoId, -1)
+      const allRepos = await __RepoController.getAll(0, 0)
+      const allNewCount = allRepos.reduce(
+        (newReleases, repo) => newReleases + repo.newReleasesCount,
+        0
+      )
+      badge.set(allNewCount)
+    } catch (error) {
+      console.error('store / repositories / decrementNewReleasesCount', error)
     }
   }
 }

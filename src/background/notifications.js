@@ -12,6 +12,6 @@ export async function showNotification (repoName) {
     message: 'Check it out in Release Watcher',
     iconUrl: '/icons/128_warning.png',
     type: 'basic',
-    silent: settings.notificationSound || false
+    silent: Boolean(settings.notificationSound) || false
   })
 }

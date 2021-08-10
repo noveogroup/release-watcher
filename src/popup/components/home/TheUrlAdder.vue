@@ -1,15 +1,13 @@
 <template>
-  <div class="TheUrlAdder">
-
+  <el-form class="TheUrlAdder">
     <el-input
       class="input"
       placeholder="/owner/name"
-      :value="urlInput"
-      @input="setRepoUrl"
+      v-model="urlInput"
       clearable
     >
-      <template slot="prepend">github.com</template></el-input
-    >
+      <template slot="prepend">github.com</template>
+    </el-input>
     <el-button
       class="button"
       type="primary"
@@ -17,7 +15,7 @@
       size="small"
       @click="addUrl"
     />
-  </div>
+  </el-form>
 </template>
 
 <script>
@@ -25,18 +23,13 @@ export default {
   name: 'TheUrlAdder',
 
   data: () => ({
-    source: 'https://github.com',
     urlInput: ''
   }),
 
   methods: {
-    setRepoUrl (url) {
-      this.urlInput = url.replace(this.source, '')
-    },
     addUrl () {
-      const url = this.urlInput
+      this.$emit('onUrlAdd', this.urlInput)
       this.urlInput = ''
-      this.$emit('onUrlAdd', url)
     }
   }
 }

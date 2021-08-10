@@ -1,8 +1,14 @@
 <template>
   <el-collapse-item
-    :title="release.version"
     :name="release.id"
+    class="releases-row"
   >
+      <template slot="title">
+      {{release.version}}
+      <el-tag type="danger" size="mini" v-if="release.new" class="releases-row__tag">
+        new!
+      </el-tag>
+    </template>
     <div
       ref="markdown"
       v-html="formattedBody"
@@ -38,7 +44,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.TheReleasesRow {
-  //
+.releases-row {
+  &__tag  {
+    margin-left: 1rem;
+  }
 }
 </style>
