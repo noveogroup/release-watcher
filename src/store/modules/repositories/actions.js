@@ -35,24 +35,23 @@ export default {
   },
   async setRepo ({ state, commit, dispatch }, addingUrl) {
     try {
-      const fetchedRepo = await githubAPI.fetchWithoutBase(
-        GITHUB_API_URL + addingUrl
-      )
       const {
         id,
         url,
-        full_name: name,
-        language = 'Without language'
-      } = fetchedRepo
-      const repo = {
+        name,
+        language
+      } = await githubAPI.fetchWithoutBase(
+        GITHUB_API_URL + addingUrl
+      )
+
+      const dbRes = await __RepoController.create({
         id,
         url,
         name,
-        language: language || 'Without language',
+        language: language || 'no language',
         disabled: 0,
         newReleasesCount: 0
-      }
-      const dbRes = await __RepoController.create(repo)
+      })
 
       await dispatch('releases/setRelease', {
         repoId: id,
@@ -92,6 +91,18 @@ export default {
       badge.set(allNewCount)
     } catch (error) {
       console.error('store / repositories / decrementNewReleasesCount', error)
+    }
+  },
+  async setBadge () {
+    try {
+      const repos = await __RepoController.getAll()
+
+      badge.set(repos.reduce(
+        (newReleases, repo) => newReleases + repo.newReleasesCount,
+        0
+      ))
+    } catch (error) {
+      console.error('store / repositories / setBadge', error)
     }
   }
 }

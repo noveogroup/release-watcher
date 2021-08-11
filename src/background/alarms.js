@@ -1,9 +1,16 @@
 import { RELEASE_CHECK_ALARM_NAME } from '@/constants'
-import { __RepoController } from '@/store/modules/repositories/actions'
-import { checkReleases } from './checkReleases'
 
-chrome.alarms.onAlarm.addListener(async alarm => {
-  if (alarm.name !== RELEASE_CHECK_ALARM_NAME) return
-  const repos = await __RepoController.getActiveRepos()
-  repos.forEach(repo => checkReleases(repo, false))
-})
+// one-time initial release check
+export const initialAlarm = () => {
+  browser.alarms.create(RELEASE_CHECK_ALARM_NAME, {
+    delayInMinutes: 0
+  })
+}
+
+// regular repeating release chceck
+export const initRepeatingAlarm = async (requestInterval) => {
+  browser.alarms.clearAll()
+  browser.alarms.create(RELEASE_CHECK_ALARM_NAME, {
+    periodInMinutes: requestInterval
+  })
+}

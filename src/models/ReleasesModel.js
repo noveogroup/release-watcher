@@ -46,7 +46,7 @@ export default class ReleasesModel extends BaseModel {
         body: {
           schema: {
             type: String,
-            required: true
+            required: false
           }
         }
       },

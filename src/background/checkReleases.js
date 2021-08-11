@@ -11,7 +11,7 @@ export const checkReleases = async (repo, initMode = false) => {
   const releases = await githubAPI.fetchWithoutBase(repo.url + '/releases')
   if (!isArray(releases)) return
 
-  releases.forEach(async release => {
+  for (const release of releases) {
     try {
       await __ReleaseController.create({
         id: release.id,
@@ -31,15 +31,13 @@ export const checkReleases = async (repo, initMode = false) => {
           (newReleases, repo) => newReleases + repo.newReleasesCount,
           0
         )
-        showNotification(repo.name)
+        showNotification(repo.name, release.html_url)
         badge.set(allNewCount)
       }
     } catch (error) {
       if (error.name === 'ConstraintError') {
         console.info('Release already exists')
-        return
-      }
-      console.error(error)
+      } else console.error(error)
     }
-  })
+  }
 }

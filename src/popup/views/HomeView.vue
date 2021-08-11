@@ -57,6 +57,7 @@ export default {
   async created () {
     try {
       await this.getRepos(this.pagination)
+      this.setBadge()
       await this.getReposTotal()
     } catch (error) {
       console.error(error)
@@ -68,7 +69,8 @@ export default {
       'deleteRepo',
       'setRepo',
       'getRepos',
-      'getReposTotal'
+      'getReposTotal',
+      'setBadge'
     ]),
 
     async onPageChange (page) {

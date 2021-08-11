@@ -66,13 +66,14 @@ export default {
       console.error('store / releases / deleteReleases', error)
     }
   },
-  async updateRelease ({ commit }, updatedRelease) {
+  async updateRelease ({ commit, dispatch }, updatedRelease) {
     try {
       const release = await __ReleaseController.update(
         updatedRelease.id,
         updatedRelease
       )
       commit(UPDATE_RELEASE, release)
+      dispatch('repositories/decrementNewReleasesCount', release.repoId, { root: true })
 
       return Promise.resolve(release)
     } catch (error) {

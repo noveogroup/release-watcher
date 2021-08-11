@@ -20,6 +20,7 @@ export const updateRepo = isAdding => {
       id,
       url: GITHUB_API_URL + pathName,
       name,
+      disabled: 0,
       language: getMostPopularLanguage(),
       newReleasesCount: 0
     },

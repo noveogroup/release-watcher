@@ -58,7 +58,6 @@ export default {
       }
       if (Boolean(showedRelease.new) === true) {
         this.$store.dispatch('releases/updateRelease', newItem)
-        this.$store.dispatch('repositories/decrementNewReleasesCount', newItem.repoId)
       }
     }
   }
