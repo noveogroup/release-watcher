@@ -9,9 +9,17 @@
       />
     </h1>
 
-    <el-popover :value="Boolean(errorEl)" trigger="manual" @click.native="errorEl=''">
-      <TheUrlAdder slot="reference" class="home__head"  @onUrlAdd="onUrlAdded($event)" />
-      <span  class="home__error-popover">{{errorEl}}</span>
+    <el-popover
+      :value="Boolean(errorEl)"
+      trigger="manual"
+      @click.native="errorEl = ''"
+    >
+      <TheUrlAdder
+        slot="reference"
+        class="home__head"
+        @onUrlAdd="onUrlAdded($event)"
+      />
+      <span class="home__error-popover">{{ errorEl }}</span>
     </el-popover>
 
     <TheReposList :repos="repos" @onRemoveRepo="deleteRepo" />
@@ -89,8 +97,9 @@ export default {
         await this.setRepo(e)
       } catch (error) {
         console.error(error)
-        if (error.message.startsWith('Key already exists')) this.errorEl = 'This repo already exists'
-        else this.errorEl = "Couldn't get repo from this url"
+        if (error.message.startsWith('Key already exists')) {
+          this.errorEl = 'This repo already exists'
+        } else this.errorEl = "Couldn't get repo from this url"
       }
     }
   }

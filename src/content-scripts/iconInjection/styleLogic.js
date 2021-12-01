@@ -6,17 +6,17 @@ const applyStylesFromObj = (obj, target) => {
   })
 }
 const releasesHeaderStyles = {
-  display: 'flex',
-  alignItems: 'flex-end'
+  display: 'flex'
 }
 
 const iconContainerStyles = {
   marginLeft: '5px',
   minWidth: '24px',
-  height: '20px',
+  height: '19px',
   cursor: 'pointer',
   display: 'flex',
-  color: 'var(--color-btn-primary-icon)'
+  color: 'var(--color-btn-primary-icon)',
+  alignSelf: 'center'
 }
 
 const iconContainerStylesPrimary = {
