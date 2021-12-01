@@ -1,4 +1,5 @@
-import axios from '@/axios'
+import githubAPI from '@/api/github'
+
 import { GITHUB_API_URL } from '@/constants'
 import {
   SET_RELEASE,
@@ -35,17 +36,20 @@ export default {
   },
   async setRelease ({ commit }, { repoId, addingUrl } = {}) {
     try {
-      const { data: releases } = await axios.get(GITHUB_API_URL + addingUrl)
-
+      const releases = await githubAPI.fetchWithoutBase(
+        GITHUB_API_URL + addingUrl
+      )
+      releases.sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
       const formattedReleases = releases.map(
         ({ id, name, body, html_url: url, tag_name: version }) => {
           return { repoId, id, url, name, version, body, new: 0 }
-        })
+        }
+      )
 
-      formattedReleases.forEach(async (release) => {
+      for (const release of formattedReleases) {
         await __ReleaseController.create(release)
         commit(SET_RELEASE, release)
-      })
+      }
 
       return Promise.resolve(formattedReleases)
     } catch (error) {
@@ -62,10 +66,14 @@ export default {
       console.error('store / releases / deleteReleases', error)
     }
   },
-  async updateRelease ({ commit }, updatedRelease) {
+  async updateRelease ({ commit, dispatch }, updatedRelease) {
     try {
-      const release = await __ReleaseController.update(updatedRelease.id, updatedRelease)
+      const release = await __ReleaseController.update(
+        updatedRelease.id,
+        updatedRelease
+      )
       commit(UPDATE_RELEASE, release)
+      dispatch('repositories/decrementNewReleasesCount', release.repoId, { root: true })
 
       return Promise.resolve(release)
     } catch (error) {

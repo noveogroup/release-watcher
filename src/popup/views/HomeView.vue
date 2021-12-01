@@ -9,7 +9,18 @@
       />
     </h1>
 
-    <TheUrlAdder class="home__head" @onUrlAdd="setRepo" />
+    <el-popover
+      :value="Boolean(errorEl)"
+      trigger="manual"
+      @click.native="errorEl = ''"
+    >
+      <TheUrlAdder
+        slot="reference"
+        class="home__head"
+        @onUrlAdd="onUrlAdded($event)"
+      />
+      <span class="home__error-popover">{{ errorEl }}</span>
+    </el-popover>
 
     <TheReposList :repos="repos" @onRemoveRepo="deleteRepo" />
 
@@ -42,7 +53,8 @@ export default {
     pagination: {
       page: 1,
       perPage: 5
-    }
+    },
+    errorEl: ''
   }),
 
   computed: {
@@ -53,6 +65,7 @@ export default {
   async created () {
     try {
       await this.getRepos(this.pagination)
+      this.setBadge()
       await this.getReposTotal()
     } catch (error) {
       console.error(error)
@@ -64,7 +77,8 @@ export default {
       'deleteRepo',
       'setRepo',
       'getRepos',
-      'getReposTotal'
+      'getReposTotal',
+      'setBadge'
     ]),
 
     async onPageChange (page) {
@@ -74,6 +88,18 @@ export default {
         await this.getRepos(this.pagination)
       } catch (error) {
         console.error(error)
+      }
+    },
+
+    async onUrlAdded (e) {
+      try {
+        this.errorEl = ''
+        await this.setRepo(e)
+      } catch (error) {
+        console.error(error)
+        if (error.message.startsWith('Key already exists')) {
+          this.errorEl = 'This repo already exists'
+        } else this.errorEl = "Couldn't get repo from this url"
       }
     }
   }
@@ -95,7 +121,6 @@ export default {
 
   &__head {
     display: flex;
-    align-items: center;
     justify-content: space-between;
     margin-bottom: 12px;
   }
@@ -108,6 +133,10 @@ export default {
     margin-top: auto;
     padding: 10px 0;
     text-align: center;
+  }
+
+  &__error-popover {
+    color: #f56c6c;
   }
 }
 </style>

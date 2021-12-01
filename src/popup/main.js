@@ -18,7 +18,8 @@ import {
   Popover,
   Popconfirm,
   Tag,
-  Divider
+  Divider,
+  Form
 } from 'element-ui'
 
 const components = {
@@ -37,7 +38,8 @@ const components = {
   Popover,
   Popconfirm,
   Tag,
-  Divider
+  Divider,
+  Form
 }
 
 Object.keys(components).forEach(key => {

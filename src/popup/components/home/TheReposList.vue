@@ -10,13 +10,17 @@
       class="repo__row"
     >
       <el-link
-        :href="repo.url"
+        @click="onViewRepo(repo)"
         :title="repo.name"
         target="_blank"
         class="repo__name"
       >
         {{ repo.name }}
       </el-link>
+
+      <el-tag size="mini" class="repo__language-tag" :color="languageTagColor(repo.language)">
+        {{ repo.language }}
+      </el-tag>
 
       <el-button-group>
         <el-button
@@ -65,6 +69,25 @@ export default {
 
     onDeleteRepo (id) {
       this.$emit('onRemoveRepo', id)
+    },
+
+    languageTagColor (langName) {
+      switch (langName.toLowerCase()) {
+        case 'javascript':
+          return '#F0DB4F'
+        case 'typescript':
+          return '#2D79C7'
+        case 'vue':
+          return '#41B883'
+        case 'html':
+          return '#E34C26'
+        case 'python':
+          return '#FFDB4F'
+        case 'css':
+          return '#563D7C'
+        default:
+          return '#ccc'
+      }
     }
   }
 }
@@ -102,6 +125,12 @@ export default {
 
   &__name {
     max-width: 200px;
+  }
+
+  &__language-tag {
+    margin-left: auto;
+    margin-right: .5rem;
+    color: white;
   }
 }
 </style>

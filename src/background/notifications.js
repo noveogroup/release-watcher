@@ -1,7 +1,7 @@
 import { __SettingsController } from '@/store/modules/settings/actions'
 import badge from './badge'
 
-export async function showNotification (repoName) {
+export async function showNotification (repoName, repoLink) {
   badge.set()
 
   const settings = await __SettingsController.getSettings()
@@ -12,6 +12,12 @@ export async function showNotification (repoName) {
     message: 'Check it out in Release Watcher',
     iconUrl: '/icons/128_warning.png',
     type: 'basic',
-    silent: settings.notificationSound || false
+    silent: Boolean(settings.notificationSound) || false,
+    buttons: repoLink ? [{ title: 'Go to GutHub' }] : null
+  })
+
+  browser.notifications.onButtonClicked.addListener((id, index) => {
+    browser.notifications.clear(id)
+    browser.tabs.create({ active: true, url: repoLink })
   })
 }

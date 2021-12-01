@@ -1,4 +1,4 @@
-import axios from '@/axios'
+import githubAPI from '@/api/github'
 import { GITHUB_API_URL } from '@/constants'
 import {
   SET_REPOS,
@@ -8,6 +8,7 @@ import {
 } from './mutation-types'
 
 import RepoController from '@/controllers/RepoController'
+import badge from '@/background/badge'
 
 export const __RepoController = new RepoController()
 
@@ -34,17 +35,23 @@ export default {
   },
   async setRepo ({ state, commit, dispatch }, addingUrl) {
     try {
-      const { data } = await axios.get(GITHUB_API_URL + addingUrl)
-      const { id, url, full_name: name, language = 'Without language' } = data
-      const repo = {
+      const {
         id,
         url,
         name,
-        language: language || 'Without language',
+        language
+      } = await githubAPI.fetchWithoutBase(
+        GITHUB_API_URL + addingUrl
+      )
+
+      const dbRes = await __RepoController.create({
+        id,
+        url,
+        name,
+        language: language || 'no language',
         disabled: 0,
         newReleasesCount: 0
-      }
-      const dbRes = await __RepoController.create(repo)
+      })
 
       await dispatch('releases/setRelease', {
         repoId: id,
@@ -57,6 +64,7 @@ export default {
       return Promise.resolve(dbRes)
     } catch (error) {
       console.error('store / repositories / setRepo', error)
+      return Promise.reject(error)
     }
   },
   async deleteRepo ({ state, commit, dispatch }, repoId) {
@@ -70,6 +78,31 @@ export default {
       return Promise.resolve(repo)
     } catch (error) {
       console.error('store / repositories / deleteRepo', error)
+    }
+  },
+  async decrementNewReleasesCount ({ commit }, repoId) {
+    try {
+      await __RepoController.incrementNewReleasesCount(repoId, -1)
+      const allRepos = await __RepoController.getAll(0, 0)
+      const allNewCount = allRepos.reduce(
+        (newReleases, repo) => newReleases + repo.newReleasesCount,
+        0
+      )
+      badge.set(allNewCount)
+    } catch (error) {
+      console.error('store / repositories / decrementNewReleasesCount', error)
+    }
+  },
+  async setBadge () {
+    try {
+      const repos = await __RepoController.getAll()
+
+      badge.set(repos.reduce(
+        (newReleases, repo) => newReleases + repo.newReleasesCount,
+        0
+      ))
+    } catch (error) {
+      console.error('store / repositories / setBadge', error)
     }
   }
 }

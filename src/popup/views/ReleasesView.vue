@@ -86,20 +86,16 @@ export default {
       'getReleasesTotal',
       'updateRelease'
     ]),
+
     onToggle (val) {
       this.toggle = val
-      this.updateAllReleases()
-    },
-
-    updateAllReleases () {
       if (this.expandedBefore) { return }
       this.releases.forEach(release => {
-        if (release.new === true) {
-          const newItem = {
+        if (release.new) {
+          this.updateRelease({
             ...release,
-            new: false
-          }
-          this.updateRelease(newItem)
+            new: 0
+          })
         }
       })
       this.expandedBefore = true

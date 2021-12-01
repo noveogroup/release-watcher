@@ -51,19 +51,14 @@ export default {
   methods: {
     onCollapseChange (val) {
       if (!val.length) { return }
-      const showedRelease = this.getReleaseById(val[val.length - 1])
+      const showedRelease = this.releases.find(release => release.id === val[0])
       const newItem = {
         ...showedRelease,
-        new: false
+        new: 0
       }
-
-      if (showedRelease.new === true) {
+      if (Boolean(showedRelease.new) === true) {
         this.$store.dispatch('releases/updateRelease', newItem)
       }
-    },
-
-    getReleaseById (id) {
-      return this.releases.find(release => +release.id === +id)
     }
   }
 }

@@ -47,14 +47,14 @@ html {
 
   body {
     margin: 0;
-    padding: 14px 10px;
     height: 100%;
   }
 
   .__app__ {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    padding: 14px 10px;
+    min-height: 100%;
   }
 }
 </style>
